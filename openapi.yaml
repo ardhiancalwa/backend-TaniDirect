@@ -1,0 +1,1160 @@
+openapi: 3.0.0
+info:
+  title: API Tani Direct Spesification
+  description: API untuk mengelola projek The Hack CCI (TaniDirect)
+  version: 1.0.0
+  contact:
+    email: ardhiancalwaofc@gmail.com
+    name: ''
+  license:
+      url: http://www.apache.org/licenses/LICENSE-2.0
+      name: Apache 2.0 
+servers:
+  - url: http://localhost:8000/tanidirect/api
+    description: TaniDirect
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Authentication for TaniDirect RESTful API
+  schemas:
+    Petani:
+      type: object
+      properties:
+        petaniID:
+          type: integer
+        nama_petani:
+          type: string
+        alamat_petani:
+          type: string
+        no_telepon_petani:
+          type: string
+        email_petani:
+          type: string
+        password_petani:
+          type: string
+        image_petani:
+          type: string
+    Produk:
+      type: object
+      properties:
+        produkID:
+          type: integer
+        deskripsi_produk:
+          type: string
+        harga:
+          type: number
+          format: float
+        jumlah_stok:
+          type: integer
+        nama_produk:
+          type: string
+    Kategori:
+      type: object
+      properties:
+        kategoriID:
+          type: integer
+        nama_kategori:
+          type: string
+    Promo:
+      type: object
+      properties:
+        nama_promo:
+          type: string
+        deskripsi_promo:
+          type: string
+        tanggal_dimulai:
+          type: string
+          format: date
+        tanggal_berakhir:
+          type: string
+          format: date
+    Pembeli:
+      type: object
+      properties:
+        pembeliID:
+          type: integer
+        nama_pembeli:
+          type: string
+        email_pembeli:
+          type: string
+        password_pembeli:
+          type: string
+        kontak_pembeli:
+          type: string
+        alamat_pembeli:
+          type: string
+        image_pembeli:
+          type: string
+    Transaksi:
+      type: object
+      properties:
+        no_transaksi:
+          type: integer
+        tanggal_transaksi:
+          type: string
+          format: date
+        waktu_transaksi:
+          type: string
+          format: time
+        status_transaksi:
+          type: string
+        total_harga:
+          type: number
+          format: float
+        metode_pembayaran:
+          type: string
+        daftar_produk:
+          type: array
+          items:
+            $ref: '#/components/schemas/Produk'
+    JadwalPengiriman:
+      type: object
+      properties:
+        tanggal_pengiriman:
+          type: string
+          format: date
+        kontak_penerima:
+          type: string
+        alamat_penerima:
+          type: string
+        nama_penerima:
+          type: string
+        estimasi_sampai:
+          type: string
+          format: date
+        biaya_pengiriman:
+          type: number
+          format: float
+        berat_beban:
+          type: number
+          format: float
+    Distributor:
+      type: object
+      properties:
+        distributorID:
+          type: integer
+        nama_distributor:
+          type: string
+        alamat:
+          type: string
+        kontak:
+          type: string
+    Error:
+      type: object
+      properties:
+        message: 
+          type: string
+      example :
+        message: Data tidak ditemukan
+paths:
+  /petani:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Petani
+      summary: Mendapatkan daftar semua petani
+      responses:
+        '200':
+          description: Daftar petani berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Petani'
+                example :
+                  - petaniID: 1
+                    nama_petani: "Petani A"
+                    alamat_petani: "Jl. Petani A No. 1"
+                    no_telepon_petani: "08123456789"
+                    email_petani: "petaniA@example.com"
+                    password_petani: "hashedpassword"
+                    image_petani: "link/to/image"
+                  - petaniID: 2
+                    nama_petani: "Petani B"
+                    alamat_petani: "Jl. Petani B No. 2"
+                    no_telepon_petani: "08123456788"
+                    email_petani: "petaniB@example.com"
+                    password_petani: "hashedpassword"
+                    image_petani: "link/to/image"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Petani
+      summary: Menambahkan petani baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Petani'
+              example:
+                petaniID: 3
+                nama_petani: "Petani C"
+                alamat_petani: "Jl. Petani C No. 3"
+                no_telepon_petani: "08123456787"
+                email_petani: "petaniC@example.com"
+                password_petani: "hashedpassword"
+                image_petani: "link/to/image"
+      responses:
+        '201':
+          description: Petani berhasil ditambahkan
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /petani/{petaniID}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Petani
+      summary: Mendapatkan detail petani
+      parameters:
+        - name: petaniID
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID unik untuk petani
+      responses:
+        '200':
+          description: Detail petani berhasil diambil
+        '404':
+          description: Petani tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Petani
+      summary: Mengubah data petani
+      parameters:
+        - name: petaniID
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                  $ref: '#/components/schemas/Produk'
+              example:
+              - petaniID: 1
+                nama_petani: "Petani A (Updated)"
+                alamat_petani: "Jl. Petani A No. 1 (Updated)"
+                no_telepon_petani: "08123456789"
+                email_petani: "petaniA@example.com"
+                password_petani: "hashedpassword"
+                image_petani: "link/to/image"
+      responses:
+        '200':
+          description: Data petani berhasil diubah
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Petani
+      summary: Menghapus petani
+      parameters:
+        - name: petaniID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Petani berhasil dihapus
+        '404':
+          description: Petani tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /produk:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Produk
+      summary: Mendapatkan daftar semua produk
+      parameters:
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [nama_produk, harga, jumlah_stok]
+            description: Parameter untuk mengurutkan daftar produk
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            description: Urutan pengurutan, 'asc' untuk ascending dan 'desc' untuk descending
+      responses:
+        '200':
+          description: Daftar produk berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produk'
+              example :
+                - produkID: 1
+                  deskripsi_produk: "Padi lokal berkualitas tinggi"
+                  nama_produk: "Padi"
+                  harga: 25000.0
+                  jumlah_stok: 100
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Produk
+      summary: Menambahkan produk baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produk'
+      responses:
+        '201':
+          description: Produk berhasil ditambahkan
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /produk/search:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Produk
+      summary: Mencari produk berdasarkan nama produk
+      parameters:
+        - name: nama_produk
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Nama produk yang ingin dicari
+      responses:
+        '200':
+          description: Produk berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produk'
+                example:
+                  - produkID: 1
+                    deskripsi_produk: "Deskripsi Produk A"
+                    harga: 10000
+                    jumlah_stok: 50
+                    nama_produk: "Produk A"
+                  - produkID: 2
+                    deskripsi_produk: "Deskripsi Produk B"
+                    harga: 15000
+                    jumlah_stok: 30
+                    nama_produk: "Produk B"
+        '404':
+          description: Produk tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /produk/{produkID}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Produk
+      summary: Mendapatkan detail produk
+      parameters:
+        - name: produkID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail produk berhasil diambil
+        '404':
+          description: Produk tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Produk
+      summary: Mengubah data produk
+      parameters:
+        - name: produkID
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produk'
+      responses:
+        '200':
+          description: Data produk berhasil diubah
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Produk
+      summary: Menghapus produk
+      parameters:
+        - name: produkID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Produk berhasil dihapus
+        '404':
+          description: Produk tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /kategori:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Kategori
+      summary: Mendapatkan daftar semua kategori
+      responses:
+        '200':
+          description: Daftar kategori berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kategori'
+                example :
+                - kategoriID: 1
+                  nama_kategori: "Beras"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Kategori
+      summary: Menambahkan kategori baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Kategori'
+      responses:
+        '201':
+          description: Kategori berhasil ditambahkan
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /kategori/{kategoriID}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Kategori
+      summary: Mendapatkan detail kategori
+      parameters:
+        - name: kategoriID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail kategori berhasil diambil
+        '404':
+          description: Kategori tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Kategori
+      summary: Mengubah data kategori
+      parameters:
+        - name: kategoriID
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Kategori'
+      responses:
+        '200':
+          description: Data kategori berhasil diubah
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Kategori
+      summary: Menghapus kategori
+      parameters:
+        - name: kategoriID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Kategori berhasil dihapus
+        '404':
+          description: Kategori tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /promo:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Promo
+      summary: Mendapatkan daftar semua promo
+      responses:
+        '200':
+          description: Daftar promo berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Promo'
+                example :
+                - nama_promo: "Promo Lebaran"
+                  deskripsi_promo: "Diskon 20% untuk semua produk beras"
+                  tanggal_dimulai: "2024-06-15"
+                  tanggal_berakhir: "2024-06-30"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Promo
+      summary: Menambahkan promo baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Promo'
+      responses:
+        '201':
+          description: Promo berhasil ditambahkan
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /promo/{nama_promo}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Promo
+      summary: Mendapatkan detail promo
+      parameters:
+        - name: nama_promo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detail promo berhasil diambil
+        '404':
+          description: Promo tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Promo
+      summary: Mengubah data promo
+      parameters:
+        - name: nama_promo
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Promo'
+      responses:
+        '200':
+          description: Data promo berhasil diubah
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Promo
+      summary: Menghapus promo
+      parameters:
+        - name: nama_promo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Promo berhasil dihapus
+        '404':
+          description: Promo tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /pembeli:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Pembeli
+      summary: Mendapatkan daftar semua pembeli
+      responses:
+        '200':
+          description: Daftar pembeli berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pembeli'
+                example :
+                - pembeliID: 1
+                  nama_pembeli: "Ani Suryani"
+                  email_pembeli: "ani@example.com"
+                  password_pembeli: "ani123"
+                  kontak_pembeli: "+6289876543210"
+                  alamat_pembeli: "Jl. Raya No. 5, Jakarta"
+                  image_pembeli: "https://example.com/images/ani.jpg"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Pembeli
+      summary: Menambahkan pembeli baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pembeli'
+      responses:
+        '201':
+          description: Pembeli berhasil ditambahkan
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /pembeli/{pembeliID}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Pembeli
+      summary: Mendapatkan detail pembeli
+      parameters:
+        - name: pembeliID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail pembeli berhasil diambil
+        '404':
+          description: Pembeli tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Pembeli
+      summary: Mengubah data pembeli
+      parameters:
+        - name: pembeliID
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pembeli'
+      responses:
+        '200':
+          description: Data pembeli berhasil diubah
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Pembeli
+      summary: Menghapus pembeli
+      parameters:
+        - name: pembeliID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pembeli berhasil dihapus
+        '404':
+          description: Pembeli tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /transaksi:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Transaksi
+      summary: Mendapatkan daftar semua transaksi
+      responses:
+        '200':
+          description: Daftar transaksi berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                 $ref: '#/components/schemas/Transaksi'
+                example :
+                - no_transaksi: 1
+                  tanggal_transaksi: "2024-06-25"
+                  waktu_transaksi: "10:30:00"
+                  status_transaksi: "selesai"
+                  total_harga: 200000.0
+                  metode_pembayaran: "Transfer Bank"
+                  daftar_produk:
+                    - produkID: 1
+                      nama_produk: "Padi"
+                      deskripsi_produk: "Padi lokal berkualitas tinggi"
+                      harga: 25000.0
+                      jumlah: 8
+                  
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Transaksi
+      summary: Menambahkan transaksi baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaksi'
+      responses:
+        '201':
+          description: Transaksi berhasil ditambahkan
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /transaksi/{no_transaksi}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Transaksi
+      summary: Mendapatkan detail transaksi
+      parameters:
+        - name: no_transaksi
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail transaksi berhasil diambil
+        '404':
+          description: Transaksi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Transaksi
+      summary: Mengubah data transaksi
+      parameters:
+        - name: no_transaksi
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaksi'
+      responses:
+        '200':
+          description: Data transaksi berhasil diubah
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Transaksi
+      summary: Menghapus transaksi
+      parameters:
+        - name: no_transaksi
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Transaksi berhasil dihapus
+        '404':
+          description: Transaksi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /jadwal_pengiriman:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Jadwal pengiriman
+      summary: Mendapatkan daftar semua jadwal pengiriman
+      responses:
+        '200':
+          description: Daftar jadwal pengiriman berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JadwalPengiriman'
+                example :
+                - tanggal_pengiriman: "2024-07-01"
+                  kontak_penerima: "+6287654321098"
+                  alamat_penerima: "Jl. Baru No. 8, Bandung"
+                  nama_penerima: "Diana Setiawan"
+                  estimasi_sampai: "2024-07-02"
+                  biaya_pengiriman: 5000.0
+                  berat_beban: 12.5 
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Jadwal pengiriman
+      summary: Menambahkan jadwal pengiriman baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JadwalPengiriman'
+      responses:
+        '201':
+          description: Jadwal pengiriman berhasil ditambahkan
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /jadwal_pengiriman/{no_transaksi}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Jadwal pengiriman
+      summary: Mendapatkan detail jadwal pengiriman
+      parameters:
+        - name: no_transaksi
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail jadwal pengiriman berhasil diambil
+        '404':
+          description: Jadwal pengiriman tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Jadwal pengiriman
+      summary: Mengubah data jadwal pengiriman
+      parameters:
+        - name: no_transaksi
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JadwalPengiriman'
+      responses:
+        '200':
+          description: Data jadwal pengiriman berhasil diubah
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Jadwal pengiriman
+      summary: Menghapus jadwal pengiriman
+      parameters:
+        - name: no_transaksi
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Jadwal pengiriman berhasil dihapus
+        '404':
+          description: Jadwal pengiriman tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /distributor:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Distributor
+      summary: Mendapatkan daftar semua distributor
+      responses:
+        '200':
+          description: Daftar distributor berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Distributor'
+                example :
+                - distributorID: 1
+                  nama_distributor: "PT Tani Maju Jaya"
+                  alamat: "Jl. Majapahit No. 15, Semarang"
+                  kontak: "+6281122334455"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Distributor
+      summary: Menambahkan distributor baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Distributor'
+      responses:
+        '201':
+          description: Distributor berhasil ditambahkan
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /distributor/{distributorID}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Distributor
+      summary: Mendapatkan detail distributor
+      parameters:
+        - name: distributorID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail distributor berhasil diambil
+        '404':
+          description: Distributor tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Distributor
+      summary: Mengubah data distributor
+      parameters:
+        - name: distributorID
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Distributor'
+      responses:
+        '200':
+          description: Data distributor berhasil diubah
+        '400':
+          description: Kesalahan input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Distributor
+      summary: Menghapus distributor
+      parameters:
+        - name: distributorID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Distributor berhasil dihapus
+        '404':
+          description: Distributor tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
