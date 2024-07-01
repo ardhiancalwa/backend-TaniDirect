@@ -7,7 +7,7 @@ API Tani Direct adalah sebuah API untuk mengelola informasi petani, produk, kate
 
 ### Langkah 1: Instalasi VSCode dan Ekstensi Markdown Preview Enhanced
 
-Pastikan Anda telah menginstal Visual Studio Code (VSCode). Selanjutnya, instal ekstensi "Markdown Preview Enhanced" dari marketplace VSCode.
+Pastikan Anda telah menginstal Visual Studio Code (VSCode). Selanjutnya, instal ekstensi "OpenAPI (Swagger) Editor" dari marketplace VSCode.
 
 ### Langkah 2: Clone Repository
 
