@@ -8,13 +8,155 @@ generator client {
 }
 
 model Petani {
-  petaniID         Int     @id @default(autoincrement())
-  nama_petani      String
-  alamat_petani    String
+  petaniID          Int            @id @default(autoincrement())
+  nama_petani       String
+  alamat_petani     String
   no_telepon_petani String
-  email_petani     String  @unique
-  password_petani  String
-  image_petani     String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  email_petani      String         @unique
+  password_petani   String
+  image_petani      String?
+  Produk            PetaniProduk[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model Kategori {
+  kategoriID     Int              @id @default(autoincrement())
+  nama_kategori  String
+  Produk         Produk[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  KategoriProduk KategoriProduk[]
+}
+
+model Promo {
+  nama_promo       String         @id
+  deskripsi_promo  String
+  tanggal_dimulai  DateTime
+  tanggal_berakhir DateTime
+  PembeliPromo     PembeliPromo[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model Pembeli {
+  pembeliID        Int             @id @default(autoincrement())
+  nama_pembeli     String
+  email_pembeli    String          @unique
+  password_pembeli String
+  kontak_pembeli   String
+  alamat_pembeli   String
+  image_pembeli    String?
+  Transaksi        Transaksi[]
+  PembeliPromo     PembeliPromo[]
+  PembeliProduk    PembeliProduk[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model Transaksi {
+  no_transaksi      Int                @id @default(autoincrement())
+  tanggal_transaksi DateTime
+  waktu_transaksi   String
+  status_transaksi  String
+  total_harga       Float
+  metode_pembayaran String
+  pembeliID         Int
+  Pembeli           Pembeli            @relation(fields: [pembeliID], references: [pembeliID])
+  TransaksiProduk   TransaksiProduk[]
+  JadwalPengiriman  JadwalPengiriman[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model JadwalPengiriman {
+  jadwalID           Int         @id @default(autoincrement())
+  tanggal_pengiriman DateTime
+  kontak_penerima    String
+  alamat_penerima    String
+  nama_penerima      String
+  estimasi_sampai    DateTime
+  biaya_pengiriman   Float
+  berat_beban        Float
+  transaksiID        Int
+  distributorID      Int
+  Transaksi          Transaksi   @relation(fields: [transaksiID], references: [no_transaksi])
+  Distributor        Distributor @relation(fields: [distributorID], references: [distributorID])
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+}
+
+model Distributor {
+  distributorID    Int                @id @default(autoincrement())
+  nama_distributor String
+  alamat           String
+  kontak           String
+  Produk           Produk[]
+  JadwalPengiriman JadwalPengiriman[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model Produk {
+  produkID         Int               @id @default(autoincrement())
+  deskripsi_produk String
+  harga            Float
+  jumlah_stok      Int
+  nama_produk      String
+  distributorID    Int
+  Distributor      Distributor       @relation(fields: [distributorID], references: [distributorID])
+  kategoriID       Int
+  Kategori         Kategori          @relation(fields: [kategoriID], references: [kategoriID])
+  KategoriProduk   KategoriProduk[]
+  TransaksiProduk  TransaksiProduk[]
+  PembeliProduk    PembeliProduk[]
+  PetaniProduk     PetaniProduk[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model KategoriProduk {
+  produkID   Int
+  kategoriID Int
+  Produk     Produk   @relation(fields: [produkID], references: [produkID])
+  Kategori   Kategori @relation(fields: [kategoriID], references: [kategoriID])
+
+  @@id([produkID, kategoriID])
+}
+
+model TransaksiProduk {
+  transaksiID Int
+  produkID    Int
+  jumlah      Int
+  Produk      Produk    @relation(fields: [produkID], references: [produkID])
+  Transaksi   Transaksi @relation(fields: [transaksiID], references: [no_transaksi])
+
+  @@id([transaksiID, produkID])
+}
+
+model PetaniProduk {
+  petaniID Int
+  produkID Int
+  Petani   Petani @relation(fields: [petaniID], references: [petaniID])
+  Produk   Produk @relation(fields: [produkID], references: [produkID])
+
+  @@id([petaniID, produkID])
+}
+
+model PembeliPromo {
+  pembeliID  Int
+  nama_promo String
+  Pembeli    Pembeli @relation(fields: [pembeliID], references: [pembeliID])
+  Promo      Promo   @relation(fields: [nama_promo], references: [nama_promo])
+
+  @@id([pembeliID, nama_promo])
+}
+
+model PembeliProduk {
+  pembeliID Int
+  produkID  Int
+  Pembeli   Pembeli @relation(fields: [pembeliID], references: [pembeliID])
+  Produk    Produk  @relation(fields: [produkID], references: [produkID])
+
+  @@id([pembeliID, produkID])
 }

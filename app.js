@@ -7,7 +7,8 @@ const morgan = require('morgan');
 const passport = require('passport');
 const session = require('express-session');
 const rateLimit = require('express-rate-limit');
-const petaniRoutes = require('./routes/petaniRoutes');
+const petaniRoutes = require('./routes/petaniRoute');
+const pembeliRoutes = require('./routes/pembeliRoute'); 
 const errorHandler = require('./middlewares/errorHandler');
 
 dotenv.config();
@@ -37,6 +38,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use('/api', petaniRoutes);
+app.use('/api', pembeliRoutes);
 
 app.use(errorHandler);
 
