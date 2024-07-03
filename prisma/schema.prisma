@@ -1,0 +1,20 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Petani {
+  petaniID         Int     @id @default(autoincrement())
+  nama_petani      String
+  alamat_petani    String
+  no_telepon_petani String
+  email_petani     String  @unique
+  password_petani  String
+  image_petani     String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
