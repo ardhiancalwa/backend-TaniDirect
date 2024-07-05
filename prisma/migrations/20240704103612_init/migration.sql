@@ -68,43 +68,12 @@ CREATE TABLE `Transaksi` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `JadwalPengiriman` (
-    `jadwalID` INTEGER NOT NULL AUTO_INCREMENT,
-    `tanggal_pengiriman` DATETIME(3) NOT NULL,
-    `kontak_penerima` VARCHAR(191) NOT NULL,
-    `alamat_penerima` VARCHAR(191) NOT NULL,
-    `nama_penerima` VARCHAR(191) NOT NULL,
-    `estimasi_sampai` DATETIME(3) NOT NULL,
-    `biaya_pengiriman` DOUBLE NOT NULL,
-    `berat_beban` DOUBLE NOT NULL,
-    `transaksiID` INTEGER NOT NULL,
-    `distributorID` INTEGER NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    PRIMARY KEY (`jadwalID`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `Distributor` (
-    `distributorID` INTEGER NOT NULL AUTO_INCREMENT,
-    `nama_distributor` VARCHAR(191) NOT NULL,
-    `alamat` VARCHAR(191) NOT NULL,
-    `kontak` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    PRIMARY KEY (`distributorID`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `Produk` (
     `produkID` INTEGER NOT NULL AUTO_INCREMENT,
     `deskripsi_produk` VARCHAR(191) NOT NULL,
     `harga` DOUBLE NOT NULL,
     `jumlah_stok` INTEGER NOT NULL,
     `nama_produk` VARCHAR(191) NOT NULL,
-    `distributorID` INTEGER NOT NULL,
     `kategoriID` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -155,15 +124,6 @@ CREATE TABLE `PembeliProduk` (
 
 -- AddForeignKey
 ALTER TABLE `Transaksi` ADD CONSTRAINT `Transaksi_pembeliID_fkey` FOREIGN KEY (`pembeliID`) REFERENCES `Pembeli`(`pembeliID`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `JadwalPengiriman` ADD CONSTRAINT `JadwalPengiriman_transaksiID_fkey` FOREIGN KEY (`transaksiID`) REFERENCES `Transaksi`(`no_transaksi`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `JadwalPengiriman` ADD CONSTRAINT `JadwalPengiriman_distributorID_fkey` FOREIGN KEY (`distributorID`) REFERENCES `Distributor`(`distributorID`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Produk` ADD CONSTRAINT `Produk_distributorID_fkey` FOREIGN KEY (`distributorID`) REFERENCES `Distributor`(`distributorID`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Produk` ADD CONSTRAINT `Produk_kategoriID_fkey` FOREIGN KEY (`kategoriID`) REFERENCES `Kategori`(`kategoriID`) ON DELETE RESTRICT ON UPDATE CASCADE;

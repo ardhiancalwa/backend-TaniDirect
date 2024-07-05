@@ -9,6 +9,9 @@ const session = require('express-session');
 const rateLimit = require('express-rate-limit');
 const petaniRoutes = require('./routes/petaniRoute');
 const pembeliRoutes = require('./routes/pembeliRoute'); 
+const kategoriRoutes = require('./routes/kategoriRoute');
+const produkRoutes = require('./routes/produkRoute');
+const promoRoutes = require('./routes/promoRoute');
 const errorHandler = require('./middlewares/errorHandler');
 
 dotenv.config();
@@ -37,8 +40,11 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-app.use('/api', petaniRoutes);
-app.use('/api', pembeliRoutes);
+app.use('/promo', promoRoutes);
+app.use('/produk', produkRoutes);
+app.use('/kategori', kategoriRoutes);
+app.use('/petani', petaniRoutes);
+app.use('/pembeli', pembeliRoutes);
 
 app.use(errorHandler);
 

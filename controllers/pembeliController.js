@@ -18,7 +18,6 @@ const loginSchema = Joi.object({
   password_pembeli: Joi.string().required(),
 });
 
-
 // Generate token for pembeli
 const generatePembeliToken = (pembeli) => {
   return jwt.sign({ id: pembeli.pembeliID }, process.env.JWT_SECRET, {
@@ -30,13 +29,11 @@ const getAllPembeli = async (req, res, next) => {
   try {
     const data = await prisma.pembeli.findMany();
     if (data.length === 0) {
-      const error = new Error("Data tidak ditemukan");
-      res.status(404);
-      throw error;
+      return res.status(404).json({ message: "Data tidak ditemukan" });
     }
     res.json({ data });
   } catch (error) {
-    next(error);
+    return { status: 500, message: error.message };
   }
 };
 

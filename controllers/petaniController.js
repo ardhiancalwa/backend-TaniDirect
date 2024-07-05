@@ -149,7 +149,7 @@ const loginPetani = async (req, res, next) => {
     if (!validPassword)
       return res.status(404).json({ message: "Email atau password salah" });
 
-    const token = generatePetaniToken(pembeli);
+    const token = generatePetaniToken(petani);
     res.json({ token });
   } catch (error) {
     next(error);

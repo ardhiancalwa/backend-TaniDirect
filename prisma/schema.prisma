@@ -64,37 +64,8 @@ model Transaksi {
   pembeliID         Int
   Pembeli           Pembeli            @relation(fields: [pembeliID], references: [pembeliID])
   TransaksiProduk   TransaksiProduk[]
-  JadwalPengiriman  JadwalPengiriman[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
-}
-
-model JadwalPengiriman {
-  jadwalID           Int         @id @default(autoincrement())
-  tanggal_pengiriman DateTime
-  kontak_penerima    String
-  alamat_penerima    String
-  nama_penerima      String
-  estimasi_sampai    DateTime
-  biaya_pengiriman   Float
-  berat_beban        Float
-  transaksiID        Int
-  distributorID      Int
-  Transaksi          Transaksi   @relation(fields: [transaksiID], references: [no_transaksi])
-  Distributor        Distributor @relation(fields: [distributorID], references: [distributorID])
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
-}
-
-model Distributor {
-  distributorID    Int                @id @default(autoincrement())
-  nama_distributor String
-  alamat           String
-  kontak           String
-  Produk           Produk[]
-  JadwalPengiriman JadwalPengiriman[]
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
 }
 
 model Produk {
@@ -103,8 +74,7 @@ model Produk {
   harga            Float
   jumlah_stok      Int
   nama_produk      String
-  distributorID    Int
-  Distributor      Distributor       @relation(fields: [distributorID], references: [distributorID])
+  image_produk     String?
   kategoriID       Int
   Kategori         Kategori          @relation(fields: [kategoriID], references: [kategoriID])
   KategoriProduk   KategoriProduk[]

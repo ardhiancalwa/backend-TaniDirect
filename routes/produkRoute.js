@@ -1,11 +1,17 @@
-// routes/petaniRoutes.js
 const express = require("express");
 const router = express.Router();
-const petaniController = require("../controllers/petaniController");
-const { registerPetani } = require("../controllers/petaniController"); 
 const passport = require("../middlewares/auth");
 const multer = require('multer');
 const path = require('path');
+
+const {
+  getAllProduk,
+  addProduk,
+  searchProduk,
+  getProdukById,
+  updateProduk,
+  deleteProduk,
+} = require("../controllers/produkController");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -18,35 +24,39 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post(
-  "/register",
-  upload.single('image_petani'),
-  async (req, res, next) => {
-    req.body.image_petani = req.file ? req.file.path : null;
-    registerPetani(req, res, next);
-  }
-);
-router.post("/login", petaniController.loginPetani);
-
 router.get(
   "/",
   passport.authenticate("jwt-petani", { session: false }),
-  petaniController.getAllPetani
+  getAllProduk
+);
+router.post(
+  "/",
+  passport.authenticate("jwt-petani", { session: false }),
+  upload.single('image_produk'),
+  async (req, res, next) => {
+    req.body.image_produk = req.file ? req.file.path : null;
+    addProduk(req, res, next);
+  }
 );
 router.get(
-  "/:petaniID",
+  "/search",
+  passport.authenticate(["jwt-petani", "jwt-pembeli"], { session: false }),
+  searchProduk
+);
+router.get(
+  "/:produkID",
   passport.authenticate("jwt-petani", { session: false }),
-  petaniController.getPetaniById
+  getProdukById
 );
 router.put(
-  "/:petaniID",
+  "/:produkID",
   passport.authenticate("jwt-petani", { session: false }),
-  petaniController.updatePetani
+  updateProduk
 );
 router.delete(
-  "/:petaniID",
+  "/:produkID",
   passport.authenticate("jwt-petani", { session: false }),
-  petaniController.deletePetani
+  deleteProduk
 );
 
 module.exports = router;
