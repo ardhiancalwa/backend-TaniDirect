@@ -51,7 +51,11 @@ router.get(
 router.put(
   "/:produkID",
   passport.authenticate("jwt-petani", { session: false }),
-  updateProduk
+  upload.single('image_produk'),
+  async (req, res, next) => {
+    req.body.image_produk = req.file ? req.file.path : null;
+    updateProduk(req, res, next);
+  },
 );
 router.delete(
   "/:produkID",

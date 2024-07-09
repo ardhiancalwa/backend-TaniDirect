@@ -26,12 +26,12 @@ router.get(
   getKategoriById
 );
 router.put(
-  "/kategori/:kategoriID",
+  "/:kategoriID",
   passport.authenticate("jwt-petani", { session: false }),
   updateKategori
 );
 router.delete(
-  "/kategori/:kategoriID",
+  "/:kategoriID",
   passport.authenticate("jwt-petani", { session: false }),
   deleteKategori
 );
