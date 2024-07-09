@@ -12,6 +12,7 @@ const pembeliRoutes = require('./routes/pembeliRoute');
 const kategoriRoutes = require('./routes/kategoriRoute');
 const produkRoutes = require('./routes/produkRoute');
 const promoRoutes = require('./routes/promoRoute');
+const transaksiRoutes = require('./routes/transaksiRoute');
 const errorHandler = require('./middlewares/errorHandler');
 
 dotenv.config();
@@ -40,6 +41,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+app.use('/transaksi', transaksiRoutes);
 app.use('/promo', promoRoutes);
 app.use('/produk', produkRoutes);
 app.use('/kategori', kategoriRoutes);
