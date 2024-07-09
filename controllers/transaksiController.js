@@ -1,174 +1,86 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const transaksiService = require('../services/transaksiService');
 
-// Create a new transaction
-exports.createTransaksi = async (req, res, next) => {
-  const {
-    tanggal_transaksi,
-    waktu_transaksi,
-    status_transaksi,
-    total_harga,
-    metode_pembayaran,
-    pembeliID,
-    produkID, // Array of objects with produkID and jumlah
-  } = req.body;
-
+const createTransaksi = async (req, res, next) => {
   try {
-    if (
-      !Array.isArray(produkID) ||
-      produkID.some((item) => !item.produkID || !item.jumlah)
-    ) {
-      return res.status(400).json({
-        error: "produkID must be an array of objects with produkID and jumlah",
-      });
-    }
-
-    // Mulai transaksi
-    const result = await prisma.$transaction(async (prisma) => {
-      // Buat transaksi baru
-      const newTransaksi = await prisma.transaksi.create({
-        data: {
-          tanggal_transaksi: new Date(tanggal_transaksi),
-          waktu_transaksi,
-          status_transaksi,
-          total_harga,
-          metode_pembayaran,
-          pembeliID,
-        },
-      });
-
-      // Tambahkan produk ke transaksi
-      const transaksiProdukData = produkID.map((item) => ({
-        transaksiID: newTransaksi.no_transaksi,
-        produkID: item.produkID,
-        jumlah: item.jumlah,
-      }));
-
-      await prisma.transaksiProduk.createMany({
-        data: transaksiProdukData,
-      });
-
-      return newTransaksi;
-    });
-
+    const result = await transaksiService.createTransaksi(req.body);
     res.status(201).json({
-      status: "success",
-      message: "Transaksi berhasil dibuat",
+      status: 'success',
+      message: 'Transaksi berhasil dibuat',
       data: result,
     });
   } catch (error) {
-    console.error("Error creating transaction:", error);
+    console.error('Error creating transaction:', error);
+    res.status(400).json({ status: 'error', message: error.message });
     next(error);
   }
 };
 
-// Get all transactions
-exports.getAllTransaksi = async (req, res) => {
+const getAllTransaksi = async (req, res, next) => {
   try {
-    const transaksi = await prisma.transaksi.findMany({
-      include: {
-        TransaksiProduk: {
-          include: {
-            Produk: true,
-          },
-        },
-      },
-    });
+    const transaksi = await transaksiService.getAllTransaksi();
     res.status(200).json({
-      status: "success",
-      message: "Transaksi berhasil ditemukan",
+      status: 'success',
+      message: 'Transaksi berhasil ditemukan',
       data: transaksi,
     });
   } catch (error) {
-    res.status(500).json({ error: "Error fetching transactions" });
+    res.status(500).json({ status: 'error', message: 'Error fetching transactions' });
     next(error);
   }
 };
 
-// Get a single transaction by ID
-exports.getTransaksiById = async (req, res) => {
+const getTransaksiById = async (req, res, next) => {
   const { no_transaksi } = req.params;
 
   try {
-    const transaksi = await prisma.transaksi.findUnique({
-      where: { no_transaksi: parseInt(no_transaksi) },
-      include: {
-        TransaksiProduk: {
-          include: {
-            Produk: true,
-          },
-        },
-      },
-    });
-    if (!transaksi)
-      return res.status(404).json({ error: "Transaction not found" });
-
+    const transaksi = await transaksiService.getTransaksiById(no_transaksi);
     res.status(200).json({
-      status: "success",
-      message: "Transaction berhasil ditemukan",
+      status: 'success',
+      message: 'Transaction berhasil ditemukan',
       data: transaksi,
     });
   } catch (error) {
-    res.status(500).json({ error: "Error fetching transaction" });
+    res.status(404).json({ status: 'error', message: error.message });
+    next(error);
   }
 };
 
-// Update a transaction by ID
-exports.updateTransaksi = async (req, res) => {
+const updateTransaksi = async (req, res, next) => {
   const { no_transaksi } = req.params;
-  const {
-    tanggal_transaksi,
-    waktu_transaksi,
-    status_transaksi,
-    total_harga,
-    metode_pembayaran,
-  } = req.body;
 
   try {
-    const updatedTransaksi = await prisma.transaksi.update({
-      where: { no_transaksi: parseInt(no_transaksi) },
-      data: {
-        tanggal_transaksi: new Date(tanggal_transaksi),
-        waktu_transaksi,
-        status_transaksi,
-        total_harga,
-        metode_pembayaran,
-      },
-    });
+    const updatedTransaksi = await transaksiService.updateTransaksi(no_transaksi, req.body);
     res.status(200).json({
-      status: "success",
-      message: "Transaction berhasil diperbarui",
+      status: 'success',
+      message: 'Transaction berhasil diperbarui',
       data: updatedTransaksi,
     });
   } catch (error) {
-    res.status(500).json({ error: "Error updating transaction" });
+    res.status(500).json({ status: 'error', message: 'Error updating transaction' });
     next(error);
   }
 };
 
-// Delete a transaction by ID
-exports.deleteTransaksi = async (req, res, next) => {
+const deleteTransaksi = async (req, res, next) => {
   const { no_transaksi } = req.params;
 
   try {
-    await prisma.$transaction(async (prisma) => {
-      // Hapus semua entri terkait di TransaksiProduk
-      await prisma.transaksiProduk.deleteMany({
-        where: { transaksiID: parseInt(no_transaksi) },
-      });
-
-      // Hapus entri di Transaksi
-      await prisma.transaksi.delete({
-        where: { no_transaksi: parseInt(no_transaksi) },
-      });
-    });
-
-    res.status(200).send({
-      status: "success",
-      message: "Transaction deleted successfully",
+    await transaksiService.deleteTransaksi(no_transaksi);
+    res.status(200).json({
+      status: 'success',
+      message: 'Transaction deleted successfully',
     });
   } catch (error) {
-    console.error("Error deleting transaction:", error);
+    console.error('Error deleting transaction:', error);
+    res.status(500).json({ status: 'error', message: 'Error deleting transaction' });
     next(error);
   }
+};
+
+module.exports = {
+  createTransaksi,  
+  getAllTransaksi,
+  getTransaksiById,
+  updateTransaksi,
+  deleteTransaksi,
 };

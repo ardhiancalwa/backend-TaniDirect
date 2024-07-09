@@ -1,35 +1,34 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const getAllPembeli = async () => {
-  return await prisma.pembeli.findMany();
+const Pembeli = {
+  findAll: async () => {
+    return await prisma.pembeli.findMany();
+  },
+  findById: async (pembeliID) => {
+    return await prisma.pembeli.findUnique({
+      where: { pembeliID: parseInt(pembeliID) },
+    });
+  },
+  findByEmail: async (email_pembeli) => {
+    return await prisma.pembeli.findUnique({
+      where: { email_pembeli },
+    });
+  },
+  create: async (data) => {
+    return await prisma.pembeli.create({ data });
+  },
+  update: async (pembeliID, data) => {
+    return await prisma.pembeli.update({
+      where: { pembeliID: parseInt(pembeliID) },
+      data,
+    });
+  },
+  delete: async (pembeliID) => {
+    return await prisma.pembeli.delete({
+      where: { pembeliID: parseInt(pembeliID) },
+    });
+  },
 };
 
-const getPembeliById = async (id) => {
-  return await prisma.pembeli.findUnique({ where: { pembeliID: id } });
-};
-
-const getPembeliByEmail = async (email) => {
-  return await prisma.pembeli.findUnique({ where: { email_pembeli: email } });
-};
-
-const createPembeli = async (data) => {
-  return await prisma.pembeli.create({ data });
-};
-
-const updatePembeli = async (id, data) => {
-  return await prisma.pembeli.update({ where: { pembeliID: id }, data });
-}
-
-const deletePembeli = async (id) => {
-  return await prisma.pembeli.delete({ where: { pembeliID: id } });
-}
-
-module.exports = {
-  getAllPembeli,
-  getPembeliById,
-  getPembeliByEmail,
-  createPembeli,
-  updatePembeli,
-  deletePembeli,
-};
+module.exports = Pembeli;

@@ -1,0 +1,44 @@
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+const Produk = {
+  findAll: async (sortField, sortOrder) => {
+    return await prisma.produk.findMany({
+      orderBy: { [sortField]: sortOrder },
+      include: {
+        Kategori: true,
+      },
+    });
+  },
+  findById: async (produkID) => {
+    return await prisma.produk.findUnique({
+      where: { produkID: parseInt(produkID) },
+      include: {
+        Kategori: true,
+      },
+    });
+  },
+  findByName: async (nama_produk) => {
+    return await prisma.produk.findMany({
+      where: { nama_produk: { contains: nama_produk } },
+    });
+  },
+  create: async (data) => {
+    return await prisma.produk.create({
+      data,
+    });
+  },
+  update: async (produkID, data) => {
+    return await prisma.produk.update({
+      where: { produkID: parseInt(produkID) },
+      data,
+    });
+  },
+  delete: async (produkID) => {
+    return await prisma.produk.delete({
+      where: { produkID: parseInt(produkID) },
+    });
+  },
+};
+
+module.exports = Produk;

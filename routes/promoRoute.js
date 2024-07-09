@@ -3,7 +3,7 @@ const passport = require('../middlewares/auth');
 const {
   getAllPromo,
   addPromo,
-  getPromoByNama,
+  getPromoByName,
   updatePromo,
   deletePromo,
 } = require('../controllers/promoController');
@@ -23,7 +23,7 @@ router.post(
 router.get(
   '/:nama_promo',
   passport.authenticate('jwt-pembeli', { session: false }),
-  getPromoByNama
+  getPromoByName
 );
 router.put(
   '/:nama_promo',

@@ -1,44 +1,24 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const promoService = require('../services/promoService');
 
-exports.getAllPromo = async (req, res, next) => {
+const getAllPromo = async (req, res, next) => {
   try {
-    const promo = await prisma.promo.findMany();
-    if (promo.length === 0) {
-      return res.status(404).json({ message: "Data tidak ditemukan" });
-    }
+    const promo = await promoService.getAllPromo();
     res.status(200).json({
-      status: "success",
-      message: "Promo berhasil ditemukan",
+      status: 'success',
+      message: 'Promo berhasil ditemukan',
       data: promo,
     });
   } catch (error) {
-    if (error.code === "P2025") {
-      // Handle record not found error
-      return res.status(404).json({
-        status: "error",
-        message: "Promo tidak ditemukan",
-      });
-    }
-    next(error);
+    res.status(404).json({ status: 'error', message: error.message });
   }
 };
 
-exports.addPromo = async (req, res, next) => {
+const addPromo = async (req, res, next) => {
   try {
-    const { nama_promo, deskripsi_promo, tanggal_dimulai, tanggal_berakhir } =
-      req.body;
-    const newPromo = await prisma.promo.create({
-      data: {
-        nama_promo,
-        deskripsi_promo,
-        tanggal_dimulai: new Date(tanggal_dimulai),
-        tanggal_berakhir: new Date(tanggal_berakhir),
-      },
-    });
+    const newPromo = await promoService.addPromo(req.body);
     res.status(201).json({
-      status: "success",
-      message: "Promo berhasil ditambahkan",
+      status: 'success',
+      message: 'Promo berhasil ditambahkan',
       data: newPromo,
     });
   } catch (error) {
@@ -46,40 +26,27 @@ exports.addPromo = async (req, res, next) => {
   }
 };
 
-exports.getPromoByNama = async (req, res, next) => {
+const getPromoByName = async (req, res, next) => {
   try {
     const { nama_promo } = req.params;
-    const promo = await prisma.promo.findUnique({
-      where: { nama_promo },
-    });
-    if (!promo) {
-      return res.status(404).json({ error: "Promo tidak ditemukan" });
-    }
+    const promo = await promoService.getPromoByName(nama_promo);
     res.status(200).json({
-      status: "success",
-      message: "Promo berhasil ditemukan",
+      status: 'success',
+      message: 'Promo berhasil ditemukan',
       data: promo,
     });
   } catch (error) {
-    next(error);
+    res.status(404).json({ status: 'error', message: error.message });
   }
 };
 
-exports.updatePromo = async (req, res, next) => {
+const updatePromo = async (req, res, next) => {
   try {
     const { nama_promo } = req.params;
-    const { deskripsi_promo, tanggal_dimulai, tanggal_berakhir } = req.body;
-    const updatedPromo = await prisma.promo.update({
-      where: { nama_promo },
-      data: {
-        deskripsi_promo,
-        tanggal_dimulai: new Date(tanggal_dimulai),
-        tanggal_berakhir: new Date(tanggal_berakhir),
-      },
-    });
+    const updatedPromo = await promoService.updatePromo(nama_promo, req.body);
     res.status(200).json({
-      status: "success",
-      message: "Promo berhasil diupdate",
+      status: 'success',
+      message: 'Promo berhasil diupdate',
       data: updatedPromo,
     });
   } catch (error) {
@@ -87,20 +54,23 @@ exports.updatePromo = async (req, res, next) => {
   }
 };
 
-exports.deletePromo = async (req, res, next) => {
+const deletePromo = async (req, res, next) => {
   try {
     const { nama_promo } = req.params;
-    await prisma.promo.delete({
-      where: { nama_promo },
-    });
+    await promoService.deletePromo(nama_promo);
     res.status(200).json({
-      status: "success",
-      message: "Promo berhasil dihapus",
+      status: 'success',
+      message: 'Promo berhasil dihapus',
     });
   } catch (error) {
-    if (error.code === "P2025") {
-      return res.status(404).json({ error: "Promo tidak ditemukan" });
-    }
-    next(error);
+    res.status(404).json({ status: 'error', message: error.message });
   }
+};
+
+module.exports = {
+  getAllPromo,
+  addPromo,
+  getPromoByName,
+  updatePromo,
+  deletePromo,
 };

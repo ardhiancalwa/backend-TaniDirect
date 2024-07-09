@@ -1,33 +1,8 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const Joi = require("joi");
-
-const pembeliSchema = Joi.object({
-  nama_pembeli: Joi.string().required(),
-  alamat_pembeli: Joi.string().required(),
-  kontak_pembeli: Joi.string().required(),
-  email_pembeli: Joi.string().email().required(),
-  password_pembeli: Joi.string().required(),
-  image_pembeli: Joi.string().optional(),
-});
-
-const loginSchema = Joi.object({
-  email_pembeli: Joi.string().email().required(),
-  password_pembeli: Joi.string().required(),
-});
-
-// Generate token for pembeli
-const generatePembeliToken = (pembeli) => {
-  return jwt.sign({ id: pembeli.pembeliID }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
-  });
-};
+const PembeliService = require("../services/pembeliService");
 
 const getAllPembeli = async (req, res, next) => {
   try {
-    const pembeli = await prisma.pembeli.findMany();
+    const pembeli = await PembeliService.findAllPembeli();
     if (pembeli.length === 0) {
       return res
         .status(404)
@@ -47,9 +22,7 @@ const getPembeliById = async (req, res, next) => {
   const { pembeliID } = req.params;
 
   try {
-    const pembeli = await prisma.pembeli.findUnique({
-      where: { pembeliID: parseInt(pembeliID) },
-    });
+    const pembeli = await PembeliService.findPembeliById(parseInt(pembeliID));
     if (!pembeli) {
       return res
         .status(404)
@@ -67,7 +40,7 @@ const getPembeliById = async (req, res, next) => {
 
 const updatePembeli = async (req, res, next) => {
   const { pembeliID } = req.params;
-  const { error } = pembeliSchema.validate(req.body);
+  const { error } = PembeliService.validatePembeli(req.body);
   if (error)
     return res
       .status(400)
@@ -83,26 +56,20 @@ const updatePembeli = async (req, res, next) => {
   } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password_pembeli, 10);
-    const data = await prisma.pembeli.update({
-      where: { pembeliID: parseInt(pembeliID) },
-      data: {
-        nama_pembeli,
-        alamat_pembeli,
-        kontak_pembeli,
-        email_pembeli,
-        password_pembeli: hashedPassword,
-        image_pembeli: req.file ? req.file.filename : image_pembeli,
-      },
+    const hashedPassword = await PembeliService.hashPassword(password_pembeli);
+    const data = await PembeliService.updatePembeli(parseInt(pembeliID), {
+      nama_pembeli,
+      alamat_pembeli,
+      kontak_pembeli,
+      email_pembeli,
+      password_pembeli: hashedPassword,
+      image_pembeli: req.file ? req.file.filename : image_pembeli,
     });
-    res.status(200).json({
-      status: "success",
-      message: "Pembeli berhasil diupdate",
-      data,
-    });
+    res
+      .status(200)
+      .json({ status: "success", message: "Pembeli berhasil diupdate", data });
   } catch (error) {
     if (error.code === "P2025") {
-      // Handle record not found error
       return res
         .status(404)
         .json({ status: "error", message: "Pembeli tidak ditemukan" });
@@ -115,16 +82,12 @@ const deletePembeli = async (req, res, next) => {
   const { pembeliID } = req.params;
 
   try {
-    await prisma.pembeli.delete({
-      where: { pembeliID: parseInt(pembeliID) },
-    });
-    res.status(200).json({
-      status: "success",
-      message: "Pembeli berhasil dihapus",
-    });
+    await PembeliService.deletePembeli(parseInt(pembeliID));
+    res
+      .status(200)
+      .json({ status: "success", message: "Pembeli berhasil dihapus" });
   } catch (error) {
     if (error.code === "P2025") {
-      // Handle record not found error
       return res
         .status(404)
         .json({ status: "error", message: "Pembeli tidak ditemukan" });
@@ -134,7 +97,7 @@ const deletePembeli = async (req, res, next) => {
 };
 
 const registerPembeli = async (req, res, next) => {
-  const { error } = pembeliSchema.validate(req.body);
+  const { error } = PembeliService.validatePembeli(req.body);
   if (error)
     return res
       .status(400)
@@ -150,16 +113,14 @@ const registerPembeli = async (req, res, next) => {
   } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password_pembeli, 10);
-    const newPembeli = await prisma.pembeli.create({
-      data: {
-        nama_pembeli,
-        alamat_pembeli,
-        kontak_pembeli,
-        email_pembeli,
-        password_pembeli: hashedPassword,
-        image_pembeli: req.file ? req.file.filename : image_pembeli,
-      },
+    const hashedPassword = await PembeliService.hashPassword(password_pembeli);
+    const newPembeli = await PembeliService.createPembeli({
+      nama_pembeli,
+      alamat_pembeli,
+      kontak_pembeli,
+      email_pembeli,
+      password_pembeli: hashedPassword,
+      image_pembeli: req.file ? req.file.filename : image_pembeli,
     });
     res.status(201).json({
       status: "success",
@@ -172,7 +133,7 @@ const registerPembeli = async (req, res, next) => {
 };
 
 const loginPembeli = async (req, res, next) => {
-  const { error } = loginSchema.validate(req.body);
+  const { error } = PembeliService.validateLogin(req.body);
   if (error)
     return res
       .status(400)
@@ -181,15 +142,13 @@ const loginPembeli = async (req, res, next) => {
   const { email_pembeli, password_pembeli } = req.body;
 
   try {
-    const pembeli = await prisma.pembeli.findUnique({
-      where: { email_pembeli },
-    });
+    const pembeli = await PembeliService.findPembeliByEmail(email_pembeli);
     if (!pembeli)
       return res
         .status(404)
         .json({ status: "error", message: "Email atau password salah" });
 
-    const validPassword = await bcrypt.compare(
+    const validPassword = await PembeliService.comparePassword(
       password_pembeli,
       pembeli.password_pembeli
     );
@@ -198,14 +157,10 @@ const loginPembeli = async (req, res, next) => {
         .status(404)
         .json({ status: "error", message: "Email atau password salah" });
 
-    const token = generatePembeliToken(pembeli);
-    res.status(200).json({
-      status: "success",
-      message: "Login berhasil",
-      data: {
-        token,
-      },
-    });
+    const token = PembeliService.generateToken(pembeli);
+    res
+      .status(200)
+      .json({ status: "success", message: "Login berhasil", data: { token } });
   } catch (error) {
     next(error);
   }
