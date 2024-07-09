@@ -40,6 +40,7 @@ router.get(
 router.put(
   "/:pembeliID",
   passport.authenticate("jwt-pembeli", { session: false }),
+  upload.single('image_pembeli'),
   pembeliController.updatePembeli
 );
 router.delete(

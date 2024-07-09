@@ -41,6 +41,7 @@ router.get(
 router.put(
   "/:petaniID",
   passport.authenticate("jwt-petani", { session: false }),
+  upload.single('image_petani'),
   petaniController.updatePetani
 );
 router.delete(
