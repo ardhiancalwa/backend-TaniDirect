@@ -1,5 +1,4 @@
 const express = require('express');
-const dotenv = require('dotenv');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -14,11 +13,11 @@ const produkRoutes = require('./routes/produkRoute');
 const promoRoutes = require('./routes/promoRoute');
 const transaksiRoutes = require('./routes/transaksiRoute');
 const errorHandler = require('./middlewares/errorHandler');
-
-dotenv.config();
+require('dotenv').config();
 
 const app = express();
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -41,6 +40,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// Routes
 app.use('/transaksi', transaksiRoutes);
 app.use('/promo', promoRoutes);
 app.use('/produk', produkRoutes);
@@ -48,10 +48,7 @@ app.use('/kategori', kategoriRoutes);
 app.use('/petani', petaniRoutes);
 app.use('/pembeli', pembeliRoutes);
 
+// Error Handling Middleware
 app.use(errorHandler);
 
-const PORT = process.env.PORT;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+module.exports = app;
