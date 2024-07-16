@@ -1,7 +1,7 @@
-const Petani = require('../models/petaniModel');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const Joi = require('joi');
+const Petani = require("../models/petaniModel");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Joi = require("joi");
 
 // validations data petani
 const petaniSchema = Joi.object({
@@ -13,23 +13,32 @@ const petaniSchema = Joi.object({
   image_petani: Joi.string().optional(),
 });
 
+const updatePetaniSchema = Joi.object({
+  nama_petani: Joi.string().optional(),
+  alamat_petani: Joi.string().optional(),
+  no_telepon_petani: Joi.string().optional(),
+  email_petani: Joi.string().email().optional(),
+  password_petani: Joi.string().optional(),
+  image_petani: Joi.string().optional(),
+})
+
 // validations data login petani
 const loginSchema = Joi.object({
   email_petani: Joi.string().email().required(),
   password_petani: Joi.string().required(),
 });
 
-// generate token petani 
+// generate token petani
 const generatePetaniToken = (petani) => {
   return jwt.sign({ id: petani.petaniID }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
+    expiresIn: "1h",
   });
 };
 
 const getAllPetani = async () => {
   const petani = await Petani.findAll();
   if (petani.length === 0) {
-    throw new Error('Data tidak ditemukan');
+    throw new Error("Data tidak ditemukan");
   }
   return petani;
 };
@@ -37,18 +46,10 @@ const getAllPetani = async () => {
 const getPetaniById = async (petaniID) => {
   const petani = await Petani.findById(petaniID);
   if (!petani) {
-    throw new Error('Petani tidak ditemukan');
+    throw new Error("Petani tidak ditemukan");
   }
   return petani;
 };
-
-// const getPetaniByEmail = async (email_petani) => {
-//   const petani = await Petani.findByEmail(email_petani);
-//   if (!petani) {
-//     throw new Error('Petani dengan email ini tidak ditemukan');
-//   }
-//   return petani;
-// }
 
 const registerPetani = async (petaniData) => {
   const { error } = petaniSchema.validate(petaniData);
@@ -72,8 +73,11 @@ const loginPetani = async (loginData) => {
 
   const { email_petani, password_petani } = loginData;
   const petani = await Petani.findByEmail(email_petani);
-  if (!petani || !(await bcrypt.compare(password_petani, petani.password_petani))) {
-    throw new Error('Email atau password salah');
+  if (
+    !petani ||
+    !(await bcrypt.compare(password_petani, petani.password_petani))
+  ) {
+    throw new Error("Email atau password salah");
   }
 
   const token = generatePetaniToken(petani);
@@ -81,7 +85,7 @@ const loginPetani = async (loginData) => {
 };
 
 const updatePetani = async (petaniID, updateData) => {
-  const { error } = petaniSchema.validate(updateData);
+  const { error } = updatePetaniSchema.validate(updateData);
   if (error) {
     throw new Error(error.details[0].message);
   }
@@ -103,7 +107,6 @@ const deletePetani = async (petaniID) => {
 module.exports = {
   getAllPetani,
   getPetaniById,
-  // getPetaniByEmail,
   registerPetani,
   loginPetani,
   updatePetani,

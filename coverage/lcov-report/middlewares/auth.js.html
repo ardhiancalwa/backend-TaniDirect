@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.21% </span>
+                <span class="strong">80.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/41</span>
+                <span class='fraction'>33/41</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.21% </span>
+                <span class="strong">80.48% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/41</span>
+                <span class='fraction'>33/41</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -116,16 +116,21 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -135,12 +140,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">const passport = require('passport');
@@ -156,31 +156,31 @@ const opts = {
 passport.use(
   'jwt-petani',
   new JwtStrategy(opts, async (jwtPayload, done) =&gt; {
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      const petani = await prisma.petani.findUnique({ where: { petaniID: jwtPayload.id } });</span>
-<span class="cstat-no" title="statement not covered" >      if (petani) {</span>
-<span class="cstat-no" title="statement not covered" >        return done(null, petani);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
+    try {
+      const petani = await prisma.petani.findUnique({ where: { petaniID: jwtPayload.id } });
+      if (petani) {
+        return done(null, petani);
+<span class="branch-0 cbranch-no" title="branch not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >      return done(null, false);</span>
 <span class="cstat-no" title="statement not covered" >    } catch (err) {</span>
 <span class="cstat-no" title="statement not covered" >      return done(err, false);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  })</span>
+  })
 );
 &nbsp;
 passport.use(
   'jwt-pembeli',
   new JwtStrategy(opts, async (jwtPayload, done) =&gt; {
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      const pembeli = await prisma.pembeli.findUnique({ where: { pembeliID: jwtPayload.id } });</span>
-<span class="cstat-no" title="statement not covered" >      if (pembeli) {</span>
-<span class="cstat-no" title="statement not covered" >        return done(null, pembeli);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
+    try {
+      const pembeli = await prisma.pembeli.findUnique({ where: { pembeliID: jwtPayload.id } });
+      if (pembeli) {
+        return done(null, pembeli);
+<span class="branch-0 cbranch-no" title="branch not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >      return done(null, false);</span>
 <span class="cstat-no" title="statement not covered" >    } catch (err) {</span>
 <span class="cstat-no" title="statement not covered" >      return done(err, false);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  })</span>
+  })
 );
 &nbsp;
 module.exports = passport;</pre></td></tr></table></pre>
@@ -190,7 +190,7 @@ module.exports = passport;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-16T05:53:06.597Z
+                at 2024-07-16T12:24:32.996Z
             </div>
         <script src="../prettify.js"></script>
         <script>

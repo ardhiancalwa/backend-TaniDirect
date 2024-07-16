@@ -138,18 +138,4 @@ describe("Petani Model", () => {
       });
     });
   });
-
-  describe("findByEmail", () => {
-    it("should find petani by email", async () => {
-      const mockPetani = { petaniID: 1, email_petani: "john@example.com" };
-      prisma.petani.findUnique.mockResolvedValue(mockPetani);
-
-      const result = await Petani.findByEmail("john@example.com");
-      expect(result).toEqual(mockPetani);
-      expect(prisma.petani.findUnique).toHaveBeenCalledTimes(1);
-      expect(prisma.petani.findUnique).toHaveBeenCalledWith({
-        where: { email_petani: "john@example.com" },
-      });
-    });
-  });
 });

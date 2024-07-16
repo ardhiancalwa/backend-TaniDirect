@@ -11,11 +11,11 @@ const Petani = {
       where: { petaniID: parseInt(petaniID) },
     });
   },
-  // findByEmail: async (email_petani) => {
-  //   return await prisma.petani.findUnique({
-  //     where: { email_petani: email_petani },
-  //   });
-  // },
+  findByEmail: async (email_petani) => {
+    return await prisma.petani.findUnique({
+      where: { email_petani: email_petani },
+    });
+  },
   create: async (data) => {
     return await prisma.petani.create({
       data: {

@@ -32,7 +32,7 @@ describe("Auth Middleware", () => {
   });
 
   it("should allow access with valid token for petani", async () => {
-    const validToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzIxMTAyMzM2LCJleHAiOjE3MjExMDU5MzZ9.xdIFHGz-OdRTVsb4_j_UE0VwAm_IENuvc3ROVws_chI";
+    const validToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzIxMTMwNjkzLCJleHAiOjE3MjExMzQyOTN9.kNPiwhBRiBRi3SK7nbAnEODXm4OCOcDD9KaquQCBY3o";
     const res = await request(app)
       .get("/petani")
       .set("Authorization", `Bearer ${validToken}`);
@@ -46,7 +46,7 @@ describe("Auth Middleware", () => {
   });
 
   it("should allow access with valid token for pembeli", async () => {
-    const validToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzIxMTAyMzcyLCJleHAiOjE3MjExMDU5NzJ9.AUSYEwPkvNFvSGYa7cVtJWKw06SvuL4Mvg5ahu-cQMQ";
+    const validToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzIxMTMwNzM3LCJleHAiOjE3MjExMzQzMzd9.YDlNC01M3Pg_kTypvQJ7NxgrwxqNa7v5UQiCulQyT68";
     const res = await request(app)
       .get("/pembeli")
       .set("Authorization", `Bearer ${validToken}`);
@@ -55,7 +55,7 @@ describe("Auth Middleware", () => {
   });
 
   it("should handle case when no petani found", async () => {
-    const tokenWithNoPetani = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzIxMTAyMzM2LCJleHAiOjE3MjExMDU5MzZ9.xdIFHGz-OdRTVsb4_j_UE0VwAm_IENuvc3ROVws_chI1"; // Use a valid token but with id that doesn't exist in petani table
+    const tokenWithNoPetani = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzIxMTExMzY0LCJleHAiOjE3MjExMTQ5NjR9.HsVxrhMbGngN1G5NAPsGPMa2rbHPrwrPgnQZtWUx6BI1"; // Use a valid token but with id that doesn't exist in petani table
     const res = await request(app)
       .get("/petani")
       .set("Authorization", `Bearer ${tokenWithNoPetani}`);
@@ -63,7 +63,7 @@ describe("Auth Middleware", () => {
   });
 
   it("should handle case when no pembeli found", async () => {
-    const tokenWithNoPembeli = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzIxMTAyMzcyLCJleHAiOjE3MjExMDU5NzJ9.AUSYEwPkvNFvSGYa7cVtJWKw06SvuL4Mvg5ahu-cQMQ1"; // Use a valid token but with id that doesn't exist in pembeli table
+    const tokenWithNoPembeli = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzIxMTExMzg4LCJleHAiOjE3MjExMTQ5ODh9.fBB_SCvaQRBlzvKBQ2oy-GuLCiGYM1Ndcn0_tPpxf6A1"; // Use a valid token but with id that doesn't exist in pembeli table
     const res = await request(app)
       .get("/pembeli")
       .set("Authorization", `Bearer ${tokenWithNoPembeli}`);
