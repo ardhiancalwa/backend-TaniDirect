@@ -38,6 +38,7 @@ router.get(
   passport.authenticate("jwt-petani", { session: false }),
   petaniController.getPetaniById
 );
+
 router.put(
   "/:petaniID",
   passport.authenticate("jwt-petani", { session: false }),

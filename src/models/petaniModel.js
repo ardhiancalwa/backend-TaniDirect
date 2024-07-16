@@ -1,5 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const bcrypt = require("bcryptjs");
 
 const Petani = {
   findAll: async () => {
@@ -10,6 +11,11 @@ const Petani = {
       where: { petaniID: parseInt(petaniID) },
     });
   },
+  // findByEmail: async (email_petani) => {
+  //   return await prisma.petani.findUnique({
+  //     where: { email_petani: email_petani },
+  //   });
+  // },
   create: async (data) => {
     return await prisma.petani.create({
       data: {
@@ -30,11 +36,6 @@ const Petani = {
   delete: async (petaniID) => {
     return await prisma.petani.delete({
       where: { petaniID: parseInt(petaniID) },
-    });
-  },
-  findByEmail: async (email_petani) => {
-    return await prisma.petani.findUnique({
-      where: { email_petani },
     });
   },
 };

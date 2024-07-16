@@ -28,6 +28,21 @@ const getPetaniById = async (req, res, next) => {
   }
 };
 
+// const getPetaniByEmail = async (req, res, next) => {
+//   try {
+//     const { email_petani } = req.query;
+//     const petani = await petaniService.getPetaniByEmail(email_petani);
+//     res.status(200).json({
+//       status: 'success',
+//       message: 'Data petani berhasil ditemukan',
+//       data: petani,
+//     });
+//   } catch (error) {
+//     res.status(404).json({ status: 'error', message: error.message });
+//     next(error);
+//   }
+// }
+
 const registerPetani = async (req, res, next) => {
   try {
     const newPetani = await petaniService.registerPetani(req.body);
@@ -86,6 +101,7 @@ const deletePetani = async (req, res, next) => {
 module.exports = {
   getAllPetani,
   getPetaniById,
+  // getPetaniByEmail,
   registerPetani,
   loginPetani,
   updatePetani,

@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 
+// validations data petani
 const petaniSchema = Joi.object({
   nama_petani: Joi.string().required(),
   alamat_petani: Joi.string().required(),
@@ -12,11 +13,13 @@ const petaniSchema = Joi.object({
   image_petani: Joi.string().optional(),
 });
 
+// validations data login petani
 const loginSchema = Joi.object({
   email_petani: Joi.string().email().required(),
   password_petani: Joi.string().required(),
 });
 
+// generate token petani 
 const generatePetaniToken = (petani) => {
   return jwt.sign({ id: petani.petaniID }, process.env.JWT_SECRET, {
     expiresIn: '1h',
@@ -38,6 +41,14 @@ const getPetaniById = async (petaniID) => {
   }
   return petani;
 };
+
+// const getPetaniByEmail = async (email_petani) => {
+//   const petani = await Petani.findByEmail(email_petani);
+//   if (!petani) {
+//     throw new Error('Petani dengan email ini tidak ditemukan');
+//   }
+//   return petani;
+// }
 
 const registerPetani = async (petaniData) => {
   const { error } = petaniSchema.validate(petaniData);
@@ -92,6 +103,7 @@ const deletePetani = async (petaniID) => {
 module.exports = {
   getAllPetani,
   getPetaniById,
+  // getPetaniByEmail,
   registerPetani,
   loginPetani,
   updatePetani,
