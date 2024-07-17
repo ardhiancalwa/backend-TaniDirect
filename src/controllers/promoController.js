@@ -22,7 +22,7 @@ const addPromo = async (req, res, next) => {
       data: newPromo,
     });
   } catch (error) {
-    next(error);
+    res.status(404).json({ status: 'error', message: error.message });
   }
 };
 
@@ -50,7 +50,7 @@ const updatePromo = async (req, res, next) => {
       data: updatedPromo,
     });
   } catch (error) {
-    next(error);
+    res.status(400).json({ status: 'error', message: error.message });
   }
 };
 

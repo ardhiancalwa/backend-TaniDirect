@@ -37,7 +37,7 @@ describe('Multer Middleware', () => {
   });
 
   it('should upload file with valid token', async () => {
-    const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzIxMTkwODQ5LCJleHAiOjE3MjExOTQ0NDl9.qsZ0bHuaJS0nsFU-VQ6vtRY5AB7uGBQGZn16a8g-ojk'; // Ganti dengan token JWT yang valid
+    const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzIxMjI5OTI4LCJleHAiOjE3MjEyMzM1Mjh9.BvSKXDgBw3_MZ46ZDc_Y3QM82iBKr9NDSaZ-qdU6Kyw'; // Ganti dengan token JWT yang valid
 
     const res = await request(app)
       .post('/uploads')

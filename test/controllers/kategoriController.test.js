@@ -29,7 +29,7 @@ describe("kategeoriController", () => {
       });
     });
 
-    it("should return an error if no kategori is found", async () => {
+    it("should return an error if no kategori are found", async () => {
       kategoriService.getAllKategori.mockRejectedValue(
         new Error("Data tidak ditemukan")
       );
@@ -72,7 +72,7 @@ describe("kategeoriController", () => {
   });
 
   describe("addKategori", () => {
-    it("should register a new kategori", async () => {
+    it("should create a new kategori", async () => {
       const mockKategoriData = {
         nama_kategori: "Makanan",
       };

@@ -102,9 +102,9 @@ describe("katagoriService", () => {
   });
 
   describe("deleteKategori", () => {
-    it("should delete a kategori", async() => {
+    it("should delete a kategori", async () => {
       Kategori.delete.mockResolvedValue();
       await expect(kategoriService.deleteKategori(1)).resolves.not.toThrow();
-    })
+    });
   });
 });
