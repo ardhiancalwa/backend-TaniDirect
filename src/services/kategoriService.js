@@ -24,8 +24,9 @@ const getKategoriById = async (kategoriID) => {
 };
 
 const updateKategori = async (kategoriID, updateData) => {
-  const updatedKategori = await Kategori.update(kategoriID, {
-    nama_kategori: updateData.nama_kategori,
+  const updatedKategori = await prisma.kategori.update({
+    where: { kategoriID: parseInt(kategoriID) },
+    updateData,
   });
   return updatedKategori;
 };
@@ -36,8 +37,8 @@ const deleteKategori = async (kategoriID) => {
 
 module.exports = {
   getAllKategori,
-  addKategori,
   getKategoriById,
+  addKategori,
   updateKategori,
   deleteKategori,
 };

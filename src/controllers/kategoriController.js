@@ -22,7 +22,7 @@ const addKategori = async (req, res, next) => {
       data: newKategori,
     });
   } catch (error) {
-    next(error);
+    res.status(404).json({ status: 'error', message: error.message });
   }
 };
 
@@ -50,13 +50,7 @@ const updateKategori = async (req, res, next) => {
       data: updatedKategori,
     });
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Kategori tidak ditemukan',
-      });
-    }
-    next(error);
+    res.status(400).json({ status: 'error', message: error.message });
   }
 };
 
@@ -69,13 +63,7 @@ const deleteKategori = async (req, res, next) => {
       message: 'Kategori berhasil dihapus',
     });
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Kategori tidak ditemukan',
-      });
-    }
-    next(error);
+    res.status(404).json({ status: 'error', message: error.message });
   }
 };
 

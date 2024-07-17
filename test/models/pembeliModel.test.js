@@ -25,7 +25,7 @@ describe("Pembeli Model", () => {
   describe("findAll", () => {
     it("should return all pembeli", async () => {
       const mockPembeli = [{ pembeliID: 1, nama_pembeli: "John Doe" }];
-      prisma.pembeli.findAll.mockResolvedValue(mockPembeli);
+      prisma.pembeli.findMany.mockResolvedValue(mockPembeli);
       const result = await Pembeli.findAll();
       expect(result).toEqual(mockPembeli);
       expect(prisma.pembeli.findAll).toHaveBeenCalledTimes(1);
@@ -35,7 +35,7 @@ describe("Pembeli Model", () => {
   describe("findById", () => {
     it("should return  pembeli by ID", async () => {
       const mockPembeli = { pembeliID: 1, nama_pembeli: "John Doe" };
-      prisma.pembeli.findById.mockResolvedValue(mockPembeli);
+      prisma.pembeli.findUnique.mockResolvedValue(mockPembeli);
 
       const result = await Pembeli.findById(1);
       expect(result).toEqual(mockPembeli);
