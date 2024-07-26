@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path'); 
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -13,14 +14,17 @@ const produkRoutes = require('./routes/produkRoute');
 const promoRoutes = require('./routes/promoRoute');
 const transaksiRoutes = require('./routes/transaksiRoute');
 const errorHandler = require('./middlewares/errorHandler');
+const corsMiddleware = require('./middlewares/cors');
 require('dotenv').config();
 
 const app = express();
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Middleware
+app.use(corsMiddleware);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 app.use(helmet());
 app.use(compression());
 app.use(morgan('dev'));

@@ -15,28 +15,11 @@ model Petani {
   email_petani      String         @unique
   password_petani   String
   image_petani      String?
+  tanggal_lahir     DateTime?
+  deskripsi         String?
   Produk            PetaniProduk[]
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
-}
-
-model Kategori {
-  kategoriID     Int              @id @default(autoincrement())
-  nama_kategori  String
-  Produk         Produk[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  KategoriProduk KategoriProduk[]
-}
-
-model Promo {
-  nama_promo       String         @id
-  deskripsi_promo  String
-  tanggal_dimulai  DateTime
-  tanggal_berakhir DateTime
-  PembeliPromo     PembeliPromo[]
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
 }
 
 model Pembeli {
@@ -46,9 +29,9 @@ model Pembeli {
   password_pembeli String
   kontak_pembeli   String
   alamat_pembeli   String
+  tanggal_lahir    DateTime?
   image_pembeli    String?
   Transaksi        Transaksi[]
-  PembeliPromo     PembeliPromo[]
   PembeliProduk    PembeliProduk[]
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
@@ -75,23 +58,11 @@ model Produk {
   jumlah_stok      Int
   nama_produk      String
   image_produk     String?
-  kategoriID       Int
-  Kategori         Kategori          @relation(fields: [kategoriID], references: [kategoriID])
-  KategoriProduk   KategoriProduk[]
   TransaksiProduk  TransaksiProduk[]
   PembeliProduk    PembeliProduk[]
   PetaniProduk     PetaniProduk[]
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-}
-
-model KategoriProduk {
-  produkID   Int
-  kategoriID Int
-  Produk     Produk   @relation(fields: [produkID], references: [produkID])
-  Kategori   Kategori @relation(fields: [kategoriID], references: [kategoriID])
-
-  @@id([produkID, kategoriID])
 }
 
 model TransaksiProduk {
@@ -111,15 +82,6 @@ model PetaniProduk {
   Produk   Produk @relation(fields: [produkID], references: [produkID])
 
   @@id([petaniID, produkID])
-}
-
-model PembeliPromo {
-  pembeliID  Int
-  nama_promo String
-  Pembeli    Pembeli @relation(fields: [pembeliID], references: [pembeliID])
-  Promo      Promo   @relation(fields: [nama_promo], references: [nama_promo])
-
-  @@id([pembeliID, nama_promo])
 }
 
 model PembeliProduk {

@@ -10,7 +10,9 @@ const petaniSchema = Joi.object({
   no_telepon_petani: Joi.string().required(),
   email_petani: Joi.string().email().required(),
   password_petani: Joi.string().required(),
-  image_petani: Joi.string().optional(),
+  image_petani: Joi.string().optional(), 
+  tanggal_lahir: Joi.date().optional(),  
+  deskripsi: Joi.string().allow("").optional(),
 });
 
 const updatePetaniSchema = Joi.object({
@@ -20,6 +22,8 @@ const updatePetaniSchema = Joi.object({
   email_petani: Joi.string().email().optional(),
   password_petani: Joi.string().optional(),
   image_petani: Joi.string().optional(),
+  tanggal_lahir: Joi.date().optional(),  
+  deskripsi: Joi.string().optional(),  
 })
 
 // validations data login petani
@@ -52,6 +56,10 @@ const getPetaniById = async (petaniID) => {
 };
 
 const registerPetani = async (petaniData) => {
+  petaniData.image_petani = petaniData.image_petani || "default_pfp.png";
+  petaniData.tanggal_lahir = petaniData.tanggal_lahir || new Date();
+  petaniData.deskripsi = petaniData.deskripsi || "";
+
   const { error } = petaniSchema.validate(petaniData);
   if (error) {
     throw new Error(error.details[0].message);
@@ -61,7 +69,6 @@ const registerPetani = async (petaniData) => {
     ...petaniData,
     password_petani: await bcrypt.hash(petaniData.password_petani, 10),
   });
-
   return newPetani;
 };
 
@@ -73,16 +80,18 @@ const loginPetani = async (loginData) => {
 
   const { email_petani, password_petani } = loginData;
   const petani = await Petani.findByEmail(email_petani);
+  
   if (
     !petani ||
     !(await bcrypt.compare(password_petani, petani.password_petani))
   ) {
-    throw new Error("Email atau password salah");
+    console.log(error);
   }
 
   const token = generatePetaniToken(petani);
-  return token;
+  return { token, id: petani.petaniID };
 };
+
 
 const updatePetani = async (petaniID, updateData) => {
   const { error } = updatePetaniSchema.validate(updateData);

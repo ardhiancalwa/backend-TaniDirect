@@ -32,7 +32,7 @@ describe("Auth Middleware", () => {
   });
 
   it("should allow access with valid token for petani", async () => {
-    const validToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzIxMjI5OTI4LCJleHAiOjE3MjEyMzM1Mjh9.BvSKXDgBw3_MZ46ZDc_Y3QM82iBKr9NDSaZ-qdU6Kyw";
+    const validToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzIxMjcyODgyLCJleHAiOjE3MjEyNzY0ODJ9.NoDiMij4OB_hM4li_zu1RB4sngzg9EgwSsXcBqouibk";
     const res = await request(app)
       .get("/petani")
       .set("Authorization", `Bearer ${validToken}`);
@@ -46,7 +46,7 @@ describe("Auth Middleware", () => {
   });
 
   it("should allow access with valid token for pembeli", async () => {
-    const validToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzIxMjI5OTA0LCJleHAiOjE3MjEyMzM1MDR9.79BBKWKPPO1slB3KmyVGSNZ8WpYFyM5PRAPTkJFj7Hc";
+    const validToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzIxMjcyODQxLCJleHAiOjE3MjEyNzY0NDF9.EWapSyzkIwqpF2h0qYzvG-VM9XHgywZbXjS1zayZrzo";
     const res = await request(app)
       .get("/pembeli")
       .set("Authorization", `Bearer ${validToken}`);

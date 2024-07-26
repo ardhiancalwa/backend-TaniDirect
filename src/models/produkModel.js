@@ -5,17 +5,11 @@ const Produk = {
   findAll: async (sortField, sortOrder) => {
     return await prisma.produk.findMany({
       orderBy: { [sortField]: sortOrder },
-      include: {
-        Kategori: true,
-      },
     });
   },
   findById: async (produkID) => {
     return await prisma.produk.findUnique({
       where: { produkID: parseInt(produkID) },
-      include: {
-        Kategori: true,
-      },
     });
   },
   findByName: async (nama_produk) => {
@@ -25,13 +19,13 @@ const Produk = {
   },
   create: async (data) => {
     return await prisma.produk.create({
-      data,
+      data : data,
     });
   },
   update: async (produkID, data) => {
     return await prisma.produk.update({
       where: { produkID: parseInt(produkID) },
-      data,
+      data : data,
     });
   },
   delete: async (produkID) => {

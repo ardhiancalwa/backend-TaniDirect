@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET
+  secretOrKey: 'plisjuara'
 };
 
 passport.use(

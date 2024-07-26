@@ -1,8 +1,8 @@
-const petaniService = require('../services/petaniService');
+const PetaniService = require('../services/petaniService');
 
 const getAllPetani = async (req, res, next) => {
   try {
-    const petani = await petaniService.getAllPetani();
+    const petani = await PetaniService.getAllPetani();
     res.status(200).json({
       status: 'success',
       message: 'Data petani berhasil ditemukan',
@@ -17,7 +17,7 @@ const getPetaniById = async (req, res, next) => {
   const { petaniID } = req.params;
 
   try {
-    const petani = await petaniService.getPetaniById(petaniID);
+    const petani = await PetaniService.getPetaniById(petaniID);
     res.status(200).json({
       status: 'success',
       message: 'Data petani berhasil ditemukan',
@@ -30,7 +30,7 @@ const getPetaniById = async (req, res, next) => {
 
 const registerPetani = async (req, res, next) => {
   try {
-    const newPetani = await petaniService.registerPetani(req.body);
+    const newPetani = await PetaniService.registerPetani(req.body);
     res.status(201).json({
       status: 'success',
       message: 'Petani berhasil didaftarkan',
@@ -43,11 +43,11 @@ const registerPetani = async (req, res, next) => {
 
 const loginPetani = async (req, res, next) => {
   try {
-    const token = await petaniService.loginPetani(req.body);
+    const { token, id } = await PetaniService.loginPetani(req.body);
     res.status(200).json({
       status: 'success',
       message: 'Login berhasil',
-      data: { token },
+      data: { token, petaniID: id },
     });
   } catch (error) {
     res.status(400).json({ status: 'error', message: error.message });
@@ -58,7 +58,7 @@ const updatePetani = async (req, res, next) => {
   const { petaniID } = req.params;
 
   try {
-    const updatedPetani = await petaniService.updatePetani(petaniID, req.body);
+    const updatedPetani = await PetaniService.updatePetani(petaniID, req.body);
     res.status(200).json({
       status: 'success',
       message: 'Petani berhasil diupdate',
@@ -73,7 +73,7 @@ const deletePetani = async (req, res, next) => {
   const { petaniID } = req.params;
 
   try {
-    await petaniService.deletePetani(petaniID);
+    await PetaniService.deletePetani(petaniID);
     res.status(200).json({
       status: 'success',
       message: 'Petani berhasil dihapus',

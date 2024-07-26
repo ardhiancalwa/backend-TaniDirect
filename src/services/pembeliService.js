@@ -10,6 +10,7 @@ const pembeliSchema = Joi.object({
   email_pembeli: Joi.string().email().required(),
   password_pembeli: Joi.string().required(),
   image_pembeli: Joi.string().optional(),
+  tanggal_lahir: Joi.date().optional()
 });
 
 const updatePembeliSchema = Joi.object({
@@ -49,6 +50,9 @@ const getPembeliById = async (pembeliID) => {
 };
 
 const registerPembeli = async (pembeliData) => {
+  pembeliData.image_pembeli = pembeliData.image_pembeli || "default_pfp.png";
+  pembeliData.tanggal_lahir = pembeliData.tanggal_lahir || new Date();
+
   const { error } = pembeliSchema.validate(pembeliData);
   if (error) {
     throw new Error(error.details[0].message);
@@ -78,7 +82,7 @@ const loginPembeli = async (loginData) => {
   }
 
   const token = generatePembeliToken(pembeli);
-  return token;
+  return { token, id: pembeli.pembeliID };
 };
 
 const updatePembeli = async (pembeliID, updateData) => {

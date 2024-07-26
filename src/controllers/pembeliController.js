@@ -4,12 +4,12 @@ const getAllPembeli = async (req, res, next) => {
   try {
     const pembeli = await PembeliService.getAllPembeli();
     res.status(200).json({
-      status: 'success',
-      message: 'Data pembeli berhasil ditemukan',
+      status: "success",
+      message: "Data pembeli berhasil ditemukan",
       data: pembeli,
     });
   } catch (error) {
-    res.status(404).json({ status: 'error', message: error.message });
+    res.status(404).json({ status: "error", message: error.message });
   }
 };
 
@@ -19,12 +19,12 @@ const getPembeliById = async (req, res, next) => {
   try {
     const pembeli = await PembeliService.getPembeliById(pembeliID);
     res.status(200).json({
-      status: 'success',
-      message: 'Data pembeli berhasil ditemukan',
+      status: "success",
+      message: "Data pembeli berhasil ditemukan",
       data: pembeli,
     });
   } catch (error) {
-    res.status(404).json({ status: 'error', message: error.message });
+    res.status(404).json({ status: "error", message: error.message });
   }
 };
 
@@ -32,14 +32,17 @@ const updatePembeli = async (req, res, next) => {
   const { petaniID } = req.params;
 
   try {
-    const updatePembeli = await PembeliService.updatePembeli(petaniID, req.body);
+    const updatePembeli = await PembeliService.updatePembeli(
+      petaniID,
+      req.body
+    );
     res.status(200).json({
-      status: 'success',
-      message: 'Pembeli berhasil diupdate',
+      status: "success",
+      message: "Pembeli berhasil diupdate",
       data: updatePembeli,
     });
   } catch (error) {
-    res.status(400).json({ status: 'error', message: error.message });
+    res.status(400).json({ status: "error", message: error.message });
   }
 };
 
@@ -65,25 +68,25 @@ const registerPembeli = async (req, res, next) => {
   try {
     const newPembeli = await PembeliService.registerPembeli(req.body);
     res.status(201).json({
-      status: 'success',
-      message: 'Pembeli berhasil didaftarkan',
+      status: "success",
+      message: "Pembeli berhasil didaftarkan",
       data: newPembeli,
     });
   } catch (error) {
-    res.status(400).json({ status: 'error', message: error.message });
+    res.status(400).json({ status: "error", message: error.message });
   }
 };
 
 const loginPembeli = async (req, res, next) => {
   try {
-    const token = await PembeliService.loginPembeli(req.body);
+    const { token, id } = await PembeliService.loginPembeli(req.body);
     res.status(200).json({
-      status: 'success',
-      message: 'Login berhasil',
-      data: { token },
+      status: "success",
+      message: "Login berhasil",
+      data: { token, pembeliID: id },
     });
   } catch (error) {
-    res.status(400).json({ status: 'error', message: error.message });
+    res.status(400).json({ status: "error", message: error.message });
   }
 };
 
