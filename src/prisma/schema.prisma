@@ -10,7 +10,12 @@ generator client {
 model Petani {
   petaniID          Int            @id @default(autoincrement())
   nama_petani       String
-  alamat_petani     String
+  provinsi         String?
+  kota             String?
+  kecamatan        String?
+  kode_pos         String?
+  detail_alamat    String?
+  nama_alamat      String?
   no_telepon_petani String
   email_petani      String         @unique
   password_petani   String
@@ -28,7 +33,12 @@ model Pembeli {
   email_pembeli    String          @unique
   password_pembeli String
   kontak_pembeli   String
-  alamat_pembeli   String
+  provinsi         String?
+  kota             String?
+  kecamatan        String?
+  kode_pos         String?
+  detail_alamat    String?
+  nama_alamat      String?
   tanggal_lahir    DateTime?
   image_pembeli    String?
   Transaksi        Transaksi[]
@@ -36,6 +46,7 @@ model Pembeli {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 }
+
 
 model Transaksi {
   no_transaksi      Int                @id @default(autoincrement())

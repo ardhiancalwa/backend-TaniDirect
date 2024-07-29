@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const Produk = {
@@ -22,9 +22,9 @@ const Produk = {
       data : data,
     });
   },
-  update: async (produkID, data) => {
+  update: async (id, data) => {
     return await prisma.produk.update({
-      where: { produkID: parseInt(produkID) },
+      where: { produkID: parseInt(id) },
       data : data,
     });
   },

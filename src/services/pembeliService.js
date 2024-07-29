@@ -5,21 +5,32 @@ const Joi = require("joi");
 
 const pembeliSchema = Joi.object({
   nama_pembeli: Joi.string().required(),
-  alamat_pembeli: Joi.string().required(),
+  provinsi: Joi.string().optional(),
+  kota: Joi.string().optional(),
+  kecamatan: Joi.string().optional(),
+  kode_pos: Joi.string().optional(),
+  detail_alamat: Joi.string().optional(),
+  nama_alamat: Joi.string().optional(),
   kontak_pembeli: Joi.string().required(),
   email_pembeli: Joi.string().email().required(),
   password_pembeli: Joi.string().required(),
   image_pembeli: Joi.string().optional(),
-  tanggal_lahir: Joi.date().optional()
+  tanggal_lahir: Joi.date().optional(),
 });
 
 const updatePembeliSchema = Joi.object({
   nama_pembeli: Joi.string().optional(),
-  alamat_pembeli: Joi.string().optional(),
+  provinsi: Joi.string().optional(),
+  kota: Joi.string().optional(),
+  kecamatan: Joi.string().optional(),
+  kode_pos: Joi.string().optional(),
+  detail_alamat: Joi.string().optional(),
+  nama_alamat: Joi.string().optional(),
   kontak_pembeli: Joi.string().optional(),
   email_pembeli: Joi.string().email().optional(),
   password_pembeli: Joi.string().optional(),
   image_pembeli: Joi.string().optional(),
+  tanggal_lahir: Joi.date().optional(),
 });
 
 const loginSchema = Joi.object({
@@ -52,6 +63,12 @@ const getPembeliById = async (pembeliID) => {
 const registerPembeli = async (pembeliData) => {
   pembeliData.image_pembeli = pembeliData.image_pembeli || "default_pfp.png";
   pembeliData.tanggal_lahir = pembeliData.tanggal_lahir || new Date();
+  pembeliData.provinsi = pembeliData.provinsi || "provinsi";
+  pembeliData.kota = pembeliData.kota || "kota";
+  pembeliData.kecamatan = pembeliData.kecamatan || "kecamatan";
+  pembeliData.kode_pos = pembeliData.kode_pos || "kode pos";
+  pembeliData.detail_alamat = pembeliData.detail_alamat || "detail alamat";
+  pembeliData.nama_alamat = pembeliData.nama_alamat || "nama alamat";
 
   const { error } = pembeliSchema.validate(pembeliData);
   if (error) {
@@ -86,18 +103,40 @@ const loginPembeli = async (loginData) => {
 };
 
 const updatePembeli = async (pembeliID, updateData) => {
-  const { error } = updatePembeliSchema.validate(updateData);
-  if (error) {
-    throw new Error(error.details[0].message);
-  }
+  try {
+    const { error } = updatePembeliSchema.validate(updateData);
+    if (error) {
+      throw new Error(error.details[0].message);
+    }
 
-  const updatePembeli = await Pembeli.update(pembeliID, {
-    ...updateData,
-    password_pembeli: updateData.password_pembeli
-      ? await bcrypt.hash(updateData.password_pembeli, 10)
-      : undefined,
-  });
-  return updatePembeli;
+    const pembeli = await Pembeli.findById(pembeliID);
+    if (!pembeli) {
+      throw new Error("Pembeli tidak ditemukan");
+    }
+
+    const formattedDate = updateData.tanggal_lahir
+      ? new Date(updateData.tanggal_lahir)
+      : undefined;
+
+    const dataToUpdate = {
+      ...updateData,
+      tanggal_lahir: formattedDate,
+      password_pembeli: updateData.password_pembeli
+        ? await bcrypt.hash(updateData.password_pembeli, 10)
+        : undefined,
+    };
+
+    Object.keys(dataToUpdate).forEach((key) => {
+      if (dataToUpdate[key] === undefined) {
+        delete dataToUpdate[key];
+      }
+    });
+
+    const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate);
+    return updatedPembeli;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const deletePembeli = async (pembeliID) => {

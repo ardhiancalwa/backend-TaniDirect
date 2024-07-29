@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("../middlewares/auth");
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const path = require("path");
 
 const {
   getAllProduk,
@@ -15,10 +15,14 @@ const {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    const uploadPath = path.join(__dirname, "../uploads");
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const fileName =
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname);
+    cb(null, fileName);
   },
 });
 
@@ -32,9 +36,9 @@ router.get(
 router.post(
   "/",
   passport.authenticate("jwt-petani", { session: false }),
-  upload.single('image_produk'),
+  upload.single("image_produk"),
   async (req, res, next) => {
-    req.body.image_produk = req.file ? req.file.path : null;
+    req.body.image_produk = req.file ? req.file.filename : null;
     addProduk(req, res, next);
   }
 );
@@ -51,11 +55,11 @@ router.get(
 router.put(
   "/:produkID",
   passport.authenticate("jwt-petani", { session: false }),
-  upload.single('image_produk'),
+  upload.single("image_produk"),
   async (req, res, next) => {
     req.body.image_produk = req.file ? req.file.path : null;
     updateProduk(req, res, next);
-  },
+  }
 );
 router.delete(
   "/:produkID",

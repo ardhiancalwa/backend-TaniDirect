@@ -7,10 +7,12 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads'); // Adjusted destination path
+    cb(null, 'uploads'); 
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    const timestamp = Date.now();
+    const extension = path.extname(file.originalname);
+    cb(null, `${file.fieldname}-${timestamp}${extension}`);
   },
 });
 

@@ -50,7 +50,7 @@ const loginPetani = async (req, res, next) => {
       data: { token, petaniID: id },
     });
   } catch (error) {
-    res.status(400).json({ status: 'error', message: error.message });
+    next(error);
   }
 };
 

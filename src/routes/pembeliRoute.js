@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pembeliController = require("../controllers/pembeliController");
 const { registerPembeli } = require("../controllers/pembeliController"); 
+const { authenticatePembeli } = require('../middlewares/roleAuth');
 const passport = require("../middlewares/auth");
 const multer = require('multer');
 const path = require('path');
@@ -29,23 +30,23 @@ router.post("/login", pembeliController.loginPembeli);
 
 router.get(
   "/",
-  passport.authenticate("jwt-pembeli", { session: false }),
+  authenticatePembeli,
   pembeliController.getAllPembeli
 );
 router.get(
   "/:pembeliID",
-  passport.authenticate("jwt-pembeli", { session: false }),
+  authenticatePembeli,
   pembeliController.getPembeliById
 );
 router.put(
   "/:pembeliID",
-  passport.authenticate("jwt-pembeli", { session: false }),
+  authenticatePembeli,
   upload.single('image_pembeli'),
   pembeliController.updatePembeli
 );
 router.delete(
   "/:pembeliID",
-  passport.authenticate("jwt-pembeli", { session: false }),
+  authenticatePembeli,
   pembeliController.deletePembeli
 );
 

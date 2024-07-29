@@ -10,7 +10,7 @@ const getAllProduk = async (req, res, next) => {
       data: produk,
     });
   } catch (error) {
-    res.status(404).json({ status: 'error', message: error.message });
+    next(error);
   }
 };
 
@@ -65,12 +65,6 @@ const updateProduk = async (req, res, next) => {
       data: updatedProduk,
     });
   } catch (error) {
-    if (error.code === 'P2025') {
-      res.status(404).json({
-        status: 'error',
-        message: 'Produk tidak ditemukan',
-      });
-    }
     next(error);
   }
 };

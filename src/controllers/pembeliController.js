@@ -29,11 +29,12 @@ const getPembeliById = async (req, res, next) => {
 };
 
 const updatePembeli = async (req, res, next) => {
-  const { petaniID } = req.params;
+  console.log('Request Body:', req.body);
+  const { pembeliID } = req.params;
 
   try {
     const updatePembeli = await PembeliService.updatePembeli(
-      petaniID,
+      pembeliID,
       req.body
     );
     res.status(200).json({
@@ -41,8 +42,10 @@ const updatePembeli = async (req, res, next) => {
       message: "Pembeli berhasil diupdate",
       data: updatePembeli,
     });
+    console.log('Response:', res);
   } catch (error) {
-    res.status(400).json({ status: "error", message: error.message });
+    // res.status(400).json({ status: "error", message: error.message });
+    next(error);
   }
 };
 
