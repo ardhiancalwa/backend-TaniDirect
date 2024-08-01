@@ -9,6 +9,9 @@
     "dev": "nodemon server.js",
     "build": "prisma generate"
   },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
