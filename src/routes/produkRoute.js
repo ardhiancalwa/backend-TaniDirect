@@ -35,7 +35,7 @@ router.get(
 );
 router.post(
   "/",
-  passport.authenticate("jwt-petani", { session: false }),
+  // passport.authenticate("jwt-petani", { session: false }),
   upload.single("image_produk"),
   async (req, res, next) => {
     req.body.image_produk = req.file ? req.file.filename : null;
@@ -44,17 +44,17 @@ router.post(
 );
 router.get(
   "/search",
-  passport.authenticate(["jwt-petani", "jwt-pembeli"], { session: false }),
+  // passport.authenticate(["jwt-petani", "jwt-pembeli"], { session: false }),
   searchProduk
 );
 router.get(
   "/:produkID",
-  passport.authenticate("jwt-petani", { session: false }),
+  // passport.authenticate("jwt-petani", { session: false }),
   getProdukById
 );
 router.put(
   "/:produkID",
-  passport.authenticate("jwt-petani", { session: false }),
+  // passport.authenticate("jwt-petani", { session: false }),
   upload.single("image_produk"),
   async (req, res, next) => {
     req.body.image_produk = req.file ? req.file.path : null;
@@ -63,7 +63,7 @@ router.put(
 );
 router.delete(
   "/:produkID",
-  passport.authenticate("jwt-petani", { session: false }),
+  // passport.authenticate("jwt-petani", { session: false }),
   deleteProduk
 );
 

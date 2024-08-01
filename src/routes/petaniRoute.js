@@ -30,24 +30,24 @@ router.post("/login", petaniController.loginPetani);
 
 router.get(
   "/",
-  passport.authenticate("jwt-petani", { session: false }),
+  // passport.authenticate("jwt-petani", { session: false }),
   petaniController.getAllPetani
 );
 router.get(
   "/:petaniID",
-  passport.authenticate("jwt-petani", { session: false }),
+  // passport.authenticate("jwt-petani", { session: false }),
   petaniController.getPetaniById
 );
 
 router.put(
   "/:petaniID",
-  passport.authenticate("jwt-petani", { session: false }),
+  // passport.authenticate("jwt-petani", { session: false }),
   upload.single('image_petani'),
   petaniController.updatePetani
 );
 router.delete(
   "/:petaniID",
-  passport.authenticate("jwt-petani", { session: false }),
+  // passport.authenticate("jwt-petani", { session: false }),
   petaniController.deletePetani
 );
 

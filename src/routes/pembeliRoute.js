@@ -30,23 +30,23 @@ router.post("/login", pembeliController.loginPembeli);
 
 router.get(
   "/",
-  authenticatePembeli,
+  // authenticatePembeli,
   pembeliController.getAllPembeli
 );
 router.get(
   "/:pembeliID",
-  authenticatePembeli,
+  // authenticatePembeli,
   pembeliController.getPembeliById
 );
 router.put(
   "/:pembeliID",
-  authenticatePembeli,
+  // authenticatePembeli,
   upload.single('image_pembeli'),
   pembeliController.updatePembeli
 );
 router.delete(
   "/:pembeliID",
-  authenticatePembeli,
+  // authenticatePembeli,
   pembeliController.deletePembeli
 );
 

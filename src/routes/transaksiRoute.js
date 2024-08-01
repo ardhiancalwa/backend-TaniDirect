@@ -10,27 +10,27 @@ router.post(
 );
 router.post(
   "/midtrans-notification",
-  passport.authenticate("jwt-pembeli", { session: false }),
+  // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.handleMidtransNotification
 );
 router.get(
   "/",
-  passport.authenticate("jwt-pembeli", { session: false }),
+  // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.getAllTransaksi
 );
 router.get(
   "/:no_transaksi",
-  passport.authenticate("jwt-pembeli", { session: false }),
+  // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.getTransaksiById
 );
 router.put(
   "/:no_transaksi",
-  passport.authenticate("jwt-pembeli", { session: false }),
+  // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.updateTransaksi
 );
 router.delete(
   "/:no_transaksi",
-  passport.authenticate("jwt-pembeli", { session: false }),
+  // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.deleteTransaksi
 );
 
