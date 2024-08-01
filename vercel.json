@@ -8,5 +8,10 @@
       "methods": ["GET", "PUT", "PATCH", "DELETE", "POST", "OPTIONS`"]
     }
   ],
-  "buildCommand": "npm run build"
+  "build": {
+    "env": {
+      "DATABASE_URL": "mysql://root:123123@localhost:3306/tani_direct"
+    }
+  }
+
 }
