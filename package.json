@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "build": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -30,7 +31,7 @@
     "mysql2": "^3.10.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "prisma": "^5.16.1",
+    "prisma": "^5.17.0",
     "rate-limiter-flexible": "^5.0.3",
     "short-uuid": "^5.2.0",
     "uuid": "^10.0.0"
