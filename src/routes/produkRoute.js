@@ -30,7 +30,7 @@ const upload = multer({ storage: storage });
 
 router.get(
   "/",
-  passport.authenticate(["jwt-petani", "jwt-pembeli"], { session: false }),
+  // passport.authenticate(["jwt-petani", "jwt-pembeli"], { session: false }),
   getAllProduk
 );
 router.post(
