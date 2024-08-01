@@ -7,5 +7,6 @@
       "dest": "server.js",
       "methods": ["GET", "PUT", "PATCH", "DELETE", "POST", "OPTIONS`"]
     }
-  ]
+  ],
+  "buildCommand": "npm run build"
 }
