@@ -8,6 +8,7 @@ const opts = {
   secretOrKey: 'plisjuara'
 };
 
+// token petani
 passport.use(
   'jwt-petani',
   new JwtStrategy(opts, async (jwtPayload, done) => {
@@ -23,6 +24,7 @@ passport.use(
   })
 );
 
+// token pembeli
 passport.use(
   'jwt-pembeli',
   new JwtStrategy(opts, async (jwtPayload, done) => {

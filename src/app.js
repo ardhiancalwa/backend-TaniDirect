@@ -54,6 +54,7 @@ app.use('/produk', produkRoutes);
 app.use('/petani', petaniRoutes);
 app.use('/pembeli', pembeliRoutes);
 
+//test
 // Error Handling Middleware
 app.use(errorHandler);
 
