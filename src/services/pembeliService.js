@@ -79,8 +79,8 @@ const registerPembeli = async (pembeliData) => {
     ...pembeliData,
     password_pembeli: await bcrypt.hash(pembeliData.password_pembeli, 10),
   });
-
-  return newPembeli;
+  const token = generatePembeliToken(newPembeli)
+  return {token, newPembeli};
 };
 
 const loginPembeli = async (loginData) => {

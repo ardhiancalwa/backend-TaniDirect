@@ -69,11 +69,11 @@ const deletePembeli = async (req, res, next) => {
 
 const registerPembeli = async (req, res, next) => {
   try {
-    const newPembeli = await PembeliService.registerPembeli(req.body);
+    const {token, newPembeli} = await PembeliService.registerPembeli(req.body);
     res.status(201).json({
       status: "success",
       message: "Pembeli berhasil didaftarkan",
-      data: newPembeli,
+      data: {token, newPembeli},
     });
   } catch (error) {
     res.status(400).json({ status: "error", message: error.message });

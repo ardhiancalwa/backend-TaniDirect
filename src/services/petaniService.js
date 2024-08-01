@@ -85,7 +85,8 @@ const registerPetani = async (petaniData) => {
     ...petaniData,
     password_petani: await bcrypt.hash(petaniData.password_petani, 10),
   });
-  return newPetani;
+  const token = generatePetaniToken(newPetani)
+  return {token, newPetani};
 };
 
 const loginPetani = async (loginData) => {

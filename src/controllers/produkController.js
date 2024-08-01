@@ -37,7 +37,7 @@ const searchProduk = async (req, res, next) => {
       data: produk,
     });
   } catch (error) {
-    res.status(404).json({ status: 'error', message: error.message });
+    next(error);
   }
 };
 

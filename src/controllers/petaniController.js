@@ -30,11 +30,11 @@ const getPetaniById = async (req, res, next) => {
 
 const registerPetani = async (req, res, next) => {
   try {
-    const newPetani = await PetaniService.registerPetani(req.body);
+    const {token, newPetani} = await PetaniService.registerPetani(req.body);
     res.status(201).json({
       status: 'success',
       message: 'Petani berhasil didaftarkan',
-      data: newPetani,
+      data: {token, newPetani},
     });
   } catch (error) {
     res.status(400).json({ status: 'error', message: error.message });

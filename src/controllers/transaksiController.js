@@ -1,4 +1,5 @@
 const transaksiService = require('../services/transaksiService');
+const midtransClient = require('midtrans-client');
 
 const createTransaksi = async (req, res, next) => {
   try {
@@ -6,25 +7,48 @@ const createTransaksi = async (req, res, next) => {
     res.status(201).json({
       status: 'success',
       message: 'Transaksi berhasil dibuat',
-      data: result,
+      data: {
+        transaksi: result.transaksi,
+        midtransToken : result.midtransToken
+      },
     });
   } catch (error) {
-    console.error('Error creating transaction:', error);
-    res.status(400).json({ status: 'error', message: error.message });
     next(error);
+  }
+};
+
+const handleMidtransNotification = async (req, res, next) => {
+  const snap = new midtransClient.Snap({
+      isProduction: false,
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
+  });
+
+  try {
+      const statusResponse = await snap.transaction.notification(req.body);
+      const orderId = statusResponse.no_transaksi;
+      const transactionStatus = statusResponse.status_transaksi;
+
+      // Update transaction status in the database
+      await prisma.transaksi.update({
+          where: { no_transaksi: orderId },
+          data: { status_transaksi: transactionStatus },
+      });
+
+      res.status(200).json({ message: 'Notification received' });
+  } catch (error) {
+      next(error);
   }
 };
 
 const getAllTransaksi = async (req, res, next) => {
   try {
-    const transaksi = await transaksiService.getAllTransaksi();
+    const result = await transaksiService.getAllTransaksi();
     res.status(200).json({
       status: 'success',
       message: 'Transaksi berhasil ditemukan',
-      data: transaksi,
+      data: result,
     });
   } catch (error) {
-    res.status(500).json({ status: 'error', message: 'Error fetching transactions' });
     next(error);
   }
 };
@@ -79,6 +103,7 @@ const deleteTransaksi = async (req, res, next) => {
 
 module.exports = {
   createTransaksi,  
+  handleMidtransNotification,
   getAllTransaksi,
   getTransaksiById,
   updateTransaksi,

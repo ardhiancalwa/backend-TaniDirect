@@ -1,9 +1,14 @@
-const Transaksi = require('../models/transaksiModel');
+const Transaksi = require("../models/transaksiModel");
 
 const createTransaksi = async (data) => {
   const { produkID } = data;
-  if (!Array.isArray(produkID) || produkID.some((item) => !item.produkID || !item.jumlah)) {
-    throw new Error('produkID must be an array of objects with produkID and jumlah');
+  if (
+    !Array.isArray(produkID) ||
+    produkID.some((item) => !item.produkID || !item.jumlah)
+  ) {
+    throw new Error(
+      "produkID must be an array of objects with produkID and jumlah"
+    );
   }
 
   const newTransaksi = await Transaksi.create(data, produkID);
@@ -11,14 +16,13 @@ const createTransaksi = async (data) => {
 };
 
 const getAllTransaksi = async () => {
-  const transaksi = await Transaksi.findAll();
-  return transaksi;
+  return await Transaksi.findAll();
 };
 
 const getTransaksiById = async (no_transaksi) => {
   const transaksi = await Transaksi.findById(no_transaksi);
   if (!transaksi) {
-    throw new Error('Transaction not found');
+    throw new Error("Transaction not found");
   }
   return transaksi;
 };

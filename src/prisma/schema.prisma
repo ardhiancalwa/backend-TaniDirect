@@ -49,9 +49,8 @@ model Pembeli {
 
 
 model Transaksi {
-  no_transaksi      Int                @id @default(autoincrement())
+  no_transaksi      String                @id
   tanggal_transaksi DateTime
-  waktu_transaksi   String
   status_transaksi  String
   total_harga       Float
   metode_pembayaran String
@@ -77,7 +76,7 @@ model Produk {
 }
 
 model TransaksiProduk {
-  transaksiID Int
+  transaksiID String
   produkID    Int
   jumlah      Int
   Produk      Produk    @relation(fields: [produkID], references: [produkID])
