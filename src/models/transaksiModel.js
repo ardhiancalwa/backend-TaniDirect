@@ -32,7 +32,6 @@ const Transaksi = {
         data: {
           no_transaksi: noTransaksi,
           tanggal_transaksi: new Date(data.tanggal_transaksi),
-          // waktu_transaksi: data.waktu_transaksi,
           status_transaksi: 'pending',
           total_harga: totalHarga,
           metode_pembayaran: data.metode_pembayaran,
@@ -100,6 +99,7 @@ const Transaksi = {
       return {
         transaksi: newTransaksi,
         midtransToken: midtransTransaction.token,
+        redirect_url: midtransTransaction.redirect_url,
       };
     });
   },

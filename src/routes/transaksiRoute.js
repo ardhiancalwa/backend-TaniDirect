@@ -5,7 +5,7 @@ const passport = require("../middlewares/auth");
 
 router.post(
   "/",
-  passport.authenticate("jwt-pembeli", { session: false }),
+  // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.createTransaksi
 );
 router.post(

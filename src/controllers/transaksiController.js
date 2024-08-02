@@ -8,8 +8,9 @@ const createTransaksi = async (req, res, next) => {
       status: 'success',
       message: 'Transaksi berhasil dibuat',
       data: {
-        transaksi: result.transaksi,
-        midtransToken : result.midtransToken
+        transaksi: result.transaksi,``
+        midtransToken : result.midtransToken,
+        redirectUrl : result.redirect_url
       },
     });
   } catch (error) {
