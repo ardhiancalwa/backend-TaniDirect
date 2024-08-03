@@ -32,7 +32,7 @@ const {
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    // folder: 'produk',
+    folder: 'produk',
     // format: async (req, file) => 'jpg', // mendukung penggunaan promise
     public_id: (req, file) => Date.now() + '-' + Math.round(Math.random() * 1e9),
   },

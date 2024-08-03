@@ -5,14 +5,25 @@ const { registerPembeli } = require("../controllers/pembeliController");
 const { authenticatePembeli } = require('../middlewares/roleAuth');
 const passport = require("../middlewares/auth");
 const multer = require('multer');
-const path = require('path');
+const cloudinary = require("../utils/cloudinary");
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+// const path = require('path');
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'uploads/');
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+//   },
+// });
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'user',
+    // format: async (req, file) => 'jpg', // mendukung penggunaan promise
+    public_id: (req, file) => Date.now() + '-' + Math.round(Math.random() * 1e9),
   },
 });
 
