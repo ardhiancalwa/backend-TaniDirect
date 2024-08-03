@@ -8,7 +8,7 @@ const createTransaksi = async (req, res, next) => {
       status: 'success',
       message: 'Transaksi berhasil dibuat',
       data: {
-        transaksi: result.transaksi,``
+        transaksi: result.transaksi,
         midtransToken : result.midtransToken,
         redirectUrl : result.redirect_url
       },

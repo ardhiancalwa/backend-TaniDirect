@@ -55,6 +55,21 @@ const getProdukById = async (req, res, next) => {
   }
 };
 
+const getProdukByPetaniId = async (req, res, next) => {
+  try {
+    const { petaniID } = req.params;
+    const produk = await produkService.getProdukByPetaniId(petaniID);
+    res.status(200).json({
+      status: 'success',
+      message: 'Data produk berhasil ditemukan',
+      data: produk,
+    });
+  } catch (error) {
+    res.status(404).json({ status: 'error', message: error.message });
+    next(error);
+  }
+};
+
 const updateProduk = async (req, res, next) => {
   try {
     const { produkID } = req.params;
@@ -90,6 +105,7 @@ module.exports = {
   addProduk,
   searchProduk,
   getProdukById,
+  getProdukByPetaniId,
   updateProduk,
   deleteProduk,
 };

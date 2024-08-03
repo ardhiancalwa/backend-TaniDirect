@@ -11,6 +11,7 @@ const {
   getProdukById,
   updateProduk,
   deleteProduk,
+  getProdukByPetaniId,
 } = require("../controllers/produkController");
 
 const storage = multer.diskStorage({
@@ -60,6 +61,11 @@ router.put(
     req.body.image_produk = req.file ? req.file.path : null;
     updateProduk(req, res, next);
   }
+);
+router.get(
+  "/petani/:petaniID",
+  // passport.authenticate("jwt-petani", { session: false }),
+  getProdukByPetaniId
 );
 router.delete(
   "/:produkID",
