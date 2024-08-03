@@ -58,7 +58,7 @@ app.use(limiter);
 //   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 //   next();
 // }, express.static(path.join(__dirname, 'uploads')));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/static", express.static(path.join(__dirname, "./uploads")));
 // app.use("/static", express.static(path.join(__dirname, "../public")));
 app.use("/transaksi", transaksiRoutes);
 app.use("/produk", produkRoutes);
