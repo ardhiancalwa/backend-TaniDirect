@@ -61,7 +61,7 @@ const getPembeliById = async (pembeliID) => {
 };
 
 const registerPembeli = async (pembeliData) => {
-  pembeliData.image_pembeli = pembeliData.image_pembeli || "https://res.cloudinary.com/dqj2k0khn/image/upload/v1722728282/toufnsfyaeee0suofqji.png";
+  pembeliData.image_pembeli = pembeliData.image_pembeli || "toufnsfyaeee0suofqji.png";
   pembeliData.tanggal_lahir = pembeliData.tanggal_lahir || new Date();
   pembeliData.provinsi = pembeliData.provinsi || "provinsi";
   pembeliData.kota = pembeliData.kota || "kota";
