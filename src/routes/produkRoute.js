@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const passport = require("../middlewares/auth");
 const multer = require("multer");
-const path = require("path");
+const cloudinary = require("../utils/cloudinary");
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+// const path = require("path");
 
 const {
   getAllProduk,
@@ -14,16 +16,25 @@ const {
   getProdukByPetaniId,
 } = require("../controllers/produkController");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadPath = path.join(process.cwd(), "src/tmp/");
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const fileName =
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname);
-    cb(null, fileName);
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     const uploadPath = path.join(process.cwd(), "src/tmp/");
+//     cb(null, uploadPath);
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+//     const fileName =
+//       file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname);
+//     cb(null, fileName);
+//   },
+// });
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    // folder: 'produk',
+    // format: async (req, file) => 'jpg', // mendukung penggunaan promise
+    public_id: (req, file) => Date.now() + '-' + Math.round(Math.random() * 1e9),
   },
 });
 
