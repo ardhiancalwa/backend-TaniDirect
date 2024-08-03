@@ -66,7 +66,7 @@ const getPetaniById = async (petaniID) => {
 };
 
 const registerPetani = async (petaniData) => {
-  petaniData.image_petani = petaniData.image_petani || "default_pfp.png";
+  petaniData.image_petani = petaniData.image_petani || "https://res.cloudinary.com/dqj2k0khn/image/upload/v1722728282/toufnsfyaeee0suofqji.png";
   petaniData.tanggal_lahir = petaniData.tanggal_lahir || new Date();
   petaniData.deskripsi = petaniData.deskripsi || "";
   petaniData.provinsi = petaniData.provinsi || "provinsi";
