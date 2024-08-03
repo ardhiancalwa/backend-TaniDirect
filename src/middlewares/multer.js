@@ -20,7 +20,7 @@ const upload = multer({ storage: storage });
 
 router.post(
   '/uploads',
-  passport.authenticate('jwt-petani', { session: false }),
+  // passport.authenticate('jwt-petani', { session: false }),
   upload.single('image_produk'),
   (req, res) => {
     res.status(200).json({ message: 'File uploaded successfully' });
