@@ -42,7 +42,7 @@
     const newProduk = await Produk.create({
       nama_produk: produkData.nama_produk,
       deskripsi_produk: produkData.deskripsi_produk,
-      image_produk: `http://localhost:4000/uploads/${produkData.image_produk.replace(/\\/g, '/')}`,
+      image_produk: `uploads/${produkData.image_produk.replace(/\\/g, '/')}`,
       harga: parseFloat(produkData.harga),
       jumlah_stok: parseInt(produkData.jumlah_stok, 10),
       petaniID: produkData.petaniID,
