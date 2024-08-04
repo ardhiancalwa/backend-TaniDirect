@@ -19,14 +19,38 @@ require("./middlewares/auth");
 const app = express();
 
 // Middleware
+// const corsOptions = {
+//   origin: ["http://localhost:3000", "http://another-allowed-origin.com"], // Allow all origins or specify your frontend URL
+//   optionsSuccessStatus: 200,
+//   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+// };
+
+// app.use(cors(corsOptions));
 const corsOptions = {
-  origin: ["http://localhost:3000", "http://another-allowed-origin.com"], // Allow all origins or specify your frontend URL
-  optionsSuccessStatus: 200,
+  origin: "http://localhost:3000", // Allow your frontend URL
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true, // Allow credentials
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
+
+// Ensure handling of preflight requests
+app.options("*", cors(corsOptions));
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 // app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
