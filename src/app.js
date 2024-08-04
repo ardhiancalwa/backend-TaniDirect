@@ -112,7 +112,7 @@ const app = express();
 //   next()
 // });
 
-app.use(corsConfig);
+// app.use(corsConfig);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -144,12 +144,12 @@ app.use(limiter);
 //   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 //   next();
 // }, express.static(path.join(__dirname, 'uploads')));
-app.use("/static", express.static(path.join(process.cwd(), "src/tmp/")));
+app.use("/static",cors(corsConfig), express.static(path.join(process.cwd(), "src/tmp/")));
 // app.use("/static", express.static(path.join(__dirname, "../public")));
-app.use("/transaksi", transaksiRoutes);
-app.use("/produk", produkRoutes);
-app.use("/petani", petaniRoutes);
-app.use("/pembeli", pembeliRoutes);
+app.use("/transaksi", cors(corsConfig), transaksiRoutes);
+app.use("/produk",cors(corsConfig), produkRoutes);
+app.use("/petani",cors(corsConfig), petaniRoutes);
+app.use("/pembeli",cors(corsConfig), pembeliRoutes);
 
 //test
 // Error Handling Middleware
