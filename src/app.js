@@ -98,7 +98,9 @@ const app = express();
 
 // app.options('*', cors());
 
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+}));
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000")
   req.header("Access-Control-Allow-Origin", "http://localhost:3000")
