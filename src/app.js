@@ -28,28 +28,28 @@ const app = express();
 
 // app.use(cors(corsOptions));
 const corsOptions = {
-  origin: "http://localhost:3000", // Allow your frontend URL
+  origin: "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, // Allow credentials
+  credentials: true,
   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 
 // Ensure handling of preflight requests
-app.options("*", cors(corsOptions));
+// app.options("*", cors(corsOptions));
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   next();
+// });
 
 // app.use(cors());
 app.use(express.json());
@@ -82,7 +82,7 @@ app.use(limiter);
 //   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 //   next();
 // }, express.static(path.join(__dirname, 'uploads')));
-app.use("/static", express.static(path.join(process.cwd(), "src/tmp/")));
+app.use("/static",cors(corsOptions), express.static(path.join(process.cwd(), "src/tmp/")));
 // app.use("/static", express.static(path.join(__dirname, "../public")));
 app.use("/transaksi", transaksiRoutes);
 app.use("/produk", produkRoutes);
