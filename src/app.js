@@ -84,7 +84,7 @@ app.use(limiter);
 //   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 //   next();
 // }, express.static(path.join(__dirname, 'uploads')));
-app.use("/static",cors(corsOptions), express.static(path.join(process.cwd(), "src/tmp/")));
+app.use("/static", express.static(path.join(process.cwd(), "src/tmp/")));
 // app.use("/static", express.static(path.join(__dirname, "../public")));
 app.use("/transaksi", transaksiRoutes);
 app.use("/produk", produkRoutes);
