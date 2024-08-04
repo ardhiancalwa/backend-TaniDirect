@@ -7,11 +7,5 @@
       "dest": "server.js",
       "methods": ["GET", "PUT", "PATCH", "DELETE", "POST", "OPTIONS`"]
     }
-  ],
-  "build": {
-    "env": {
-      "DATABASE_URL": "mysql://root:123123@localhost:3306/tani_direct"
-    }
-  }
-
+  ]
 }
