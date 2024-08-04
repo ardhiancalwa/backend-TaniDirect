@@ -19,15 +19,15 @@ require("./middlewares/auth");
 const app = express();
 
 // Middleware
-// const corsOptions = {
-//   origin: "*", // Allow all origins or specify your frontend URL
-//   optionsSuccessStatus: 200,
-//   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-// };
+const corsOptions = {
+  origin: ["http://localhost:3000", "http://another-allowed-origin.com"], // Allow all origins or specify your frontend URL
+  optionsSuccessStatus: 200,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-// app.use(cors(corsOptions));
-app.use(cors());
+app.use(cors(corsOptions));
+// app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
