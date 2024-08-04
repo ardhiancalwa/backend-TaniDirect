@@ -16,7 +16,7 @@
 const cors = require('cors');
 
 const corsConfig = {
-  origin: true,
+  origin: 'https://frontend-tani-direct.vercel.app',
   methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
