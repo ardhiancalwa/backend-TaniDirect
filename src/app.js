@@ -28,7 +28,7 @@ const app = express();
 
 // app.use(cors(corsOptions));
 const corsOptions = {
-  origin: "'http://localhost:3000",
+  origin: "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -41,7 +41,7 @@ app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
