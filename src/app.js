@@ -27,27 +27,52 @@ const app = express();
 // };
 
 // app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: "*",
+//   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+//   credentials: true,
+//   optionsSuccessStatus: 200,
+// };
+
+// app.use(cors(corsOptions));
+
+// // Ensure handling of preflight requests
+// app.options("*", cors(corsOptions));
+
+// app.use((req, res, next) => {
+//   res.header(
+//     req.header("Access-Control-Allow-Origin", "*"),
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   next();
+// });
+
 const corsOptions = {
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: 'http://localhost:3000', // specify the origin you want to allow
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 
-// Ensure handling of preflight requests
-app.options("*", cors(corsOptions));
+// Middleware untuk menangani preflight requests
+app.options('*', cors(corsOptions));
 
+// Middleware untuk menambahkan header
 app.use((req, res, next) => {
-  res.header(
-    req.header("Access-Control-Allow-Origin", "*"),
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-  res.header("Access-Control-Allow-Credentials", "true");
+  res.header('Access-Control-Allow-Origin', req.header('Origin'));
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
   next();
 });
 
