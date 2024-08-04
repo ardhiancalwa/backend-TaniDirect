@@ -51,9 +51,29 @@ const app = express();
 //   next();
 // });
 
+// app.use(cors({
+//   origin: "*",
+// }));
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: 'http://localhost:3000', // specify the origin you want to allow
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true // allow credentials
 }));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
+app.options('*', cors());
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
