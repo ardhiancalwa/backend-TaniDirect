@@ -51,30 +51,30 @@ const app = express();
 //   next();
 // });
 
-const corsOptions = {
-  origin: 'http://localhost:3000', // specify the origin you want to allow
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
+// const corsOptions = {
+//   origin: 'http://:3000', // specify the origin you want to allow
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   credentials: true,
+//   optionsSuccessStatus: 200,
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
-// Middleware untuk menangani preflight requests
-app.options('*', cors(corsOptions));
+// // Middleware untuk menangani preflight requests
+// app.options('*', cors(corsOptions));
 
-// Middleware untuk menambahkan header
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', req.header('Origin'));
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
-});
+// // Middleware untuk menambahkan header
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', req.header('Origin'));
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+//   res.header('Access-Control-Allow-Credentials', 'true');
+//   if (req.method === 'OPTIONS') {
+//     return res.status(200).end();
+//   }
+//   next();
+// });
 
 // app.use(cors({
 //   origin: "*",
@@ -98,7 +98,12 @@ app.use((req, res, next) => {
 
 // app.options('*', cors());
 
-
+app.use(cors());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*")
+  req.header("Access-Control-Allow-Origin", "*")
+  next()
+})
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
