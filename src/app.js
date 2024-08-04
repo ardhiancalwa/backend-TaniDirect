@@ -12,6 +12,7 @@ const pembeliRoutes = require("./routes/pembeliRoute");
 const produkRoutes = require("./routes/produkRoute");
 const transaksiRoutes = require("./routes/transaksiRoute");
 const errorHandler = require("./middlewares/errorHandler");
+const corsConfig = require("./middlewares/cors")
 // const corsMiddleware = require('./middlewares/cors');
 require("dotenv").config();
 require("./middlewares/auth");
@@ -99,17 +100,20 @@ const app = express();
 // app.options('*', cors());
 
 // app.use(cors());
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*")
-  req.header("Access-Control-Allow-Origin", "*")
-  // res.header('Access-Control-Allow-Origin', req.header('Origin'));
-  res.header('Access-Control-Allow-Methods', '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Headers', '*');
-  res.header('Accept', 'application/json');
-  res.header('Content-Type', 'application/json');
-  next()
-});
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "*")
+//   req.header("Access-Control-Allow-Origin", "*")
+//   // res.header('Access-Control-Allow-Origin', req.header('Origin'));
+//   res.header('Access-Control-Allow-Methods', '*');
+//   res.header('Access-Control-Allow-Credentials', 'true');
+//   res.header('Access-Control-Allow-Headers', '*');
+//   res.header('Accept', 'application/json');
+//   res.header('Content-Type', 'application/json');
+//   next()
+// });
+
+app.use(corsConfig);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
