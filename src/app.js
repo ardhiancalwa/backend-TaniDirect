@@ -57,6 +57,7 @@ const app = express();
 app.use(cors({
   origin: 'http://localhost:3000', // specify the origin you want to allow
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true // allow credentials
 }));
 
