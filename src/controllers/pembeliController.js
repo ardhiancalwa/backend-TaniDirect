@@ -84,7 +84,8 @@ const loginPembeli = async (req, res, next) => {
   try {
     const { token, id } = await PembeliService.loginPembeli(req.body);
     res.status(200).json({
-      status: "success",
+      // status: "success",
+      status: "ok",
       message: "Login berhasil",
       data: { token, pembeliID: id },
     });
