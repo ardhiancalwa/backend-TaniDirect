@@ -24,7 +24,7 @@ const Produk = {
     });
   },
   findByName: async (nama_produk) => {
-    return await prisma.$queryRaw`SELECT * FROM Produk WHERE LOWER(nama_produk) LIKE LOWER(${`%${nama_produk}%`})`;
+    return await prisma.$queryRaw`SELECT * FROM "Produk" WHERE LOWER(nama_produk) LIKE LOWER(${`%${nama_produk}%`})`;
   },
   create: async (data) => {
     return await prisma.produk.create({
