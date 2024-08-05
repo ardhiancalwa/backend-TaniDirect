@@ -11,12 +11,10 @@ const Petani = {
       where: { petaniID: parseInt(petaniID) },
     });
   },
-  findByEmail: async (email) => {
-    const petani = await prisma.petani.findUnique({
-      where: { email_petani: email },
+  findByEmail: async (email_petani) => {
+    return await prisma.petani.findUnique({
+      where: { email_petani },
     });
-    console.log("Petani findByEmail:", email, petani);
-    return petani;
   },
   create: async (data) => {
     return await prisma.petani.create({

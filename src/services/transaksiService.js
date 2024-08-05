@@ -1,38 +1,56 @@
+const {
+  ValidationError,
+  AuthenticationError,
+  InternalServerError,
+  NotFoundError,
+} = require("../middlewares/errorHandler");
 const Transaksi = require("../models/transaksiModel");
 
 const createTransaksi = async (data) => {
   const { produkID } = data;
+  if (!produkID) {
+    throw new ValidationError("produkID is required");
+  }
   if (
     !Array.isArray(produkID) ||
     produkID.some((item) => !item.produkID || !item.jumlah)
   ) {
-    throw new Error(
+    throw new ValidationError(
       "produkID must be an array of objects with produkID and jumlah"
     );
   }
 
-  const newTransaksi = await Transaksi.create(data, produkID);
-  return newTransaksi;
+  try {
+    const newTransaksi = await Transaksi.create(data, produkID);
+    return newTransaksi;
+  } catch (error) {
+    throw new InternalServerError(
+      "An unexpected error occurred while creating the transaction"
+    );
+  }
 };
 
 const getAllTransaksi = async () => {
-  return await Transaksi.findAll();
+  const transaksi = await Transaksi.findAll();
+  if (transaksi.length === 0) {
+    throw new NotFoundError("Data not found");
+  }
+  return transaksi;
 };
 
 const getTransaksiById = async (no_transaksi) => {
   const transaksi = await Transaksi.findById(no_transaksi);
   if (!transaksi) {
-    throw new Error("Transaction not found");
+    throw new NotFoundError("Transaction not found");
   }
   return transaksi;
 };
 
-const updateTransaksi = async (no_transaksi, data) => {
-  const updatedTransaksi = await Transaksi.update(no_transaksi, data);
-  return updatedTransaksi;
-};
-
 const deleteTransaksi = async (no_transaksi) => {
+  const transaksi = await Transaksi.findById(no_transaksi);
+  if (!transaksi) {
+    throw new NotFoundError("Transaction not found");
+  }
   await Transaksi.delete(no_transaksi);
 };
 
@@ -40,6 +58,5 @@ module.exports = {
   createTransaksi,
   getAllTransaksi,
   getTransaksiById,
-  updateTransaksi,
   deleteTransaksi,
 };

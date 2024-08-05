@@ -2,6 +2,11 @@ const Pembeli = require("../models/pembeliModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
+const {
+  ValidationError,
+  AuthenticationError,
+  NotFoundError,
+} = require("../middlewares/errorHandler");
 
 const pembeliSchema = Joi.object({
   nama_pembeli: Joi.string().required(),
@@ -47,7 +52,7 @@ const generatePembeliToken = (pembeli) => {
 const getAllPembeli = async () => {
   const pembeli = await Pembeli.findAll();
   if (pembeli.length === 0) {
-    throw new Error("Data tidak ditemukan");
+    throw new NotFoundError("Data not found");
   }
   return pembeli;
 };
@@ -55,7 +60,7 @@ const getAllPembeli = async () => {
 const getPembeliById = async (pembeliID) => {
   const pembeli = await Pembeli.findById(pembeliID);
   if (!pembeli) {
-    throw new Error("Pembeli tidak ditemukan");
+    throw new NotFoundError("User not found");
   }
   return pembeli;
 };
@@ -72,30 +77,41 @@ const registerPembeli = async (pembeliData) => {
 
   const { error } = pembeliSchema.validate(pembeliData);
   if (error) {
-    throw new Error(error.details[0].message);
+    throw new ValidationError(error.details[0].message);
+  }
+
+  const { email_pembeli, password_pembeli } = pembeliData;
+  const existingPembeli = await Pembeli.findByEmail(email_pembeli);
+  if (existingPembeli) {
+    throw new ValidationError("Email already in use");
   }
 
   const newPembeli = await Pembeli.create({
     ...pembeliData,
     password_pembeli: await bcrypt.hash(pembeliData.password_pembeli, 10),
   });
-  const token = generatePembeliToken(newPembeli)
-  return {token, newPembeli};
+  const token = generatePembeliToken(newPembeli);
+  return { token, newPembeli };
 };
 
 const loginPembeli = async (loginData) => {
   const { error } = loginSchema.validate(loginData);
   if (error) {
-    throw new Error(error.details[0].message);
+    throw new ValidationError(error.details[0].message);
   }
 
   const { email_pembeli, password_pembeli } = loginData;
   const pembeli = await Pembeli.findByEmail(email_pembeli);
-  if (
-    !pembeli ||
-    !(await bcrypt.compare(password_pembeli, pembeli.password_pembeli))
-  ) {
-    throw new Error("Email atau password salah");
+  if (!pembeli) {
+    throw new AuthenticationError("Invalid email or password");
+  }
+
+  const isPasswordValid = await bcrypt.compare(
+    password_pembeli,
+    pembeli.password_pembeli
+  );
+  if (!isPasswordValid) {
+    throw new AuthenticationError("Invalid email or password");
   }
 
   const token = generatePembeliToken(pembeli);
@@ -103,43 +119,43 @@ const loginPembeli = async (loginData) => {
 };
 
 const updatePembeli = async (pembeliID, updateData) => {
-  try {
-    const { error } = updatePembeliSchema.validate(updateData);
-    if (error) {
-      throw new Error(error.details[0].message);
-    }
-
-    const pembeli = await Pembeli.findById(pembeliID);
-    if (!pembeli) {
-      throw new Error("Pembeli tidak ditemukan");
-    }
-
-    const formattedDate = updateData.tanggal_lahir
-      ? new Date(updateData.tanggal_lahir)
-      : undefined;
-
-    const dataToUpdate = {
-      ...updateData,
-      tanggal_lahir: formattedDate,
-      password_pembeli: updateData.password_pembeli
-        ? await bcrypt.hash(updateData.password_pembeli, 10)
-        : undefined,
-    };
-
-    Object.keys(dataToUpdate).forEach((key) => {
-      if (dataToUpdate[key] === undefined) {
-        delete dataToUpdate[key];
-      }
-    });
-
-    const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate);
-    return updatedPembeli;
-  } catch (error) {
-    console.log(error);
+  const { error } = updatePembeliSchema.validate(updateData);
+  if (error) {
+    throw new ValidationError(error.details[0].message);
   }
+
+  const pembeli = await Pembeli.findById(pembeliID);
+  if (!pembeli) {
+    throw new NotFoundError("User not found");
+  }
+
+  const formattedDate = updateData.tanggal_lahir
+    ? new Date(updateData.tanggal_lahir)
+    : undefined;
+
+  const dataToUpdate = {
+    ...updateData,
+    tanggal_lahir: formattedDate,
+    password_pembeli: updateData.password_pembeli
+      ? await bcrypt.hash(updateData.password_pembeli, 10)
+      : undefined,
+  };
+
+  Object.keys(dataToUpdate).forEach((key) => {
+    if (dataToUpdate[key] === undefined) {
+      delete dataToUpdate[key];
+    }
+  });
+
+  const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate);
+  return updatedPembeli;
 };
 
 const deletePembeli = async (pembeliID) => {
+  const pembeli = await Pembeli.findById(pembeliID);
+  if (!pembeli) {
+    throw new NotFoundError("User not found");
+  }
   await Pembeli.delete(pembeliID);
 };
 

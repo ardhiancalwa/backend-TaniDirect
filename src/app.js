@@ -97,7 +97,7 @@ const app = express();
 //   next();
 // });
 
-app.options('*', cors());
+// app.options('*', cors());
 
 app.use(cors());
 app.use((req, res, next) => {
@@ -153,6 +153,6 @@ app.use("/pembeli", pembeliRoutes);
 
 //test
 // Error Handling Middleware
-app.use(errorHandler);
+// app.use(errorHandler);
 
 module.exports = app;

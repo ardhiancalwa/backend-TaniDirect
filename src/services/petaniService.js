@@ -2,6 +2,11 @@ const Petani = require("../models/petaniModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
+const {
+  ValidationError,
+  AuthenticationError,
+  NotFoundError,
+} = require("../middlewares/errorHandler");
 
 // validations data petani
 const petaniSchema = Joi.object({
@@ -15,8 +20,8 @@ const petaniSchema = Joi.object({
   no_telepon_petani: Joi.string().required(),
   email_petani: Joi.string().email().required(),
   password_petani: Joi.string().required(),
-  image_petani: Joi.string().optional(), 
-  tanggal_lahir: Joi.date().optional(),  
+  image_petani: Joi.string().optional(),
+  tanggal_lahir: Joi.date().optional(),
   deskripsi: Joi.string().allow("").optional(),
 });
 
@@ -32,9 +37,9 @@ const updatePetaniSchema = Joi.object({
   email_petani: Joi.string().email().optional(),
   password_petani: Joi.string().optional(),
   image_petani: Joi.string().optional(),
-  tanggal_lahir: Joi.date().optional(),  
-  deskripsi: Joi.string().optional(),  
-})
+  tanggal_lahir: Joi.date().optional(),
+  deskripsi: Joi.string().optional(),
+});
 
 // validations data login petani
 const loginSchema = Joi.object({
@@ -52,7 +57,7 @@ const generatePetaniToken = (petani) => {
 const getAllPetani = async () => {
   const petani = await Petani.findAll();
   if (petani.length === 0) {
-    throw new Error("Data tidak ditemukan");
+    throw new NotFoundError("Data not found");
   }
   return petani;
 };
@@ -60,13 +65,14 @@ const getAllPetani = async () => {
 const getPetaniById = async (petaniID) => {
   const petani = await Petani.findById(petaniID);
   if (!petani) {
-    throw new Error("Petani tidak ditemukan");
+    throw new NotFoundError("User not found");
   }
   return petani;
 };
 
 const registerPetani = async (petaniData) => {
-  petaniData.image_petani = petaniData.image_petani || "https://res.cloudinary.com/dqj2k0khn/image/upload/v1722728282/toufnsfyaeee0suofqji.png";
+  petaniData.image_petani =
+    petaniData.image_petani || "toufnsfyaeee0suofqji.png";
   petaniData.tanggal_lahir = petaniData.tanggal_lahir || new Date();
   petaniData.deskripsi = petaniData.deskripsi || "";
   petaniData.provinsi = petaniData.provinsi || "provinsi";
@@ -78,30 +84,36 @@ const registerPetani = async (petaniData) => {
 
   const { error } = petaniSchema.validate(petaniData);
   if (error) {
-    throw new Error(error.details[0].message);
+    throw new ValidationError(error.details[0].message);
+  }
+
+  const { email_petani, password_petani } = petaniData;
+  const existingPetani = await Petani.findByEmail(email_petani);
+  if (existingPetani) {
+    throw new ValidationError("Email already in use");
   }
 
   const newPetani = await Petani.create({
     ...petaniData,
     password_petani: await bcrypt.hash(petaniData.password_petani, 10),
   });
-  const token = generatePetaniToken(newPetani)
-  return {token, newPetani};
+  const token = generatePetaniToken(newPetani);
+  return { token, newPetani };
 };
 
 const loginPetani = async (loginData) => {
   const { error } = loginSchema.validate(loginData);
   if (error) {
-    throw new Error(error.details[0].message);
+    throw new ValidationError(error.details[0].message);
   }
 
   const { email_petani, password_petani } = loginData;
   const petani = await Petani.findByEmail(email_petani);
-  
-  if (
-    !petani ||
-    !(await bcrypt.compare(password_petani, petani.password_petani))
-  ) {
+  if (!petani) {
+    throw new AuthenticationError("Invalid email or password");
+  }
+
+  if (!(await bcrypt.compare(password_petani, petani.password_petani))) {
     console.log(error);
   }
 
@@ -109,11 +121,15 @@ const loginPetani = async (loginData) => {
   return { token, id: petani.petaniID };
 };
 
-
 const updatePetani = async (petaniID, updateData) => {
   const { error } = updatePetaniSchema.validate(updateData);
   if (error) {
-    throw new Error(error.details[0].message);
+    throw new ValidationError(error.details[0].message);
+  }
+
+  const petani = await Petani.findById(petaniID);
+  if (!petani) {
+    throw new NotFoundError("User not found");
   }
 
   const updatedPetani = await Petani.update(petaniID, {
@@ -127,6 +143,10 @@ const updatePetani = async (petaniID, updateData) => {
 };
 
 const deletePetani = async (petaniID) => {
+  const petani = await Petani.findById(petaniID);
+  if (!petani) {
+    throw new NotFoundError("User not found");
+  }
   await Petani.delete(petaniID);
 };
 

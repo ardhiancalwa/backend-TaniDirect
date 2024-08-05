@@ -1,16 +1,25 @@
-const produkService = require('../services/produkService');
+const produkService = require("../services/produkService");
 
 const getAllProduk = async (req, res, next) => {
   try {
     const { sort, order } = req.query;
     const produk = await produkService.getAllProduk(sort, order);
     res.status(200).json({
-      status: 'success',
-      message: 'Daftar produk',
+      status: "success",
+      statusCode: res.statusCode,
+      message: "Product successfully found",
       data: produk,
     });
   } catch (error) {
-    next(error);
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        status: "error",
+        statusCode: error.statusCode,
+        message: error.message,
+      });
+    } else {
+      next(error);
+    }
   }
 };
 
@@ -18,12 +27,21 @@ const addProduk = async (req, res, next) => {
   try {
     const newProduk = await produkService.addProduk(req.body);
     res.status(201).json({
-      status: 'success',
-      message: 'Produk berhasil ditambahkan',
+      status: "success",
+      statusCode: res.statusCode,
+      message: "Product successfully added",
       data: newProduk,
     });
   } catch (error) {
-    next(error);
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        status: "error",
+        statusCode: error.statusCode,
+        message: error.message,
+      });
+    } else {
+      next(error);
+    }
   }
 };
 
@@ -32,12 +50,21 @@ const searchProduk = async (req, res, next) => {
     const { nama_produk } = req.query;
     const produk = await produkService.searchProduk(nama_produk);
     res.status(200).json({
-      status: 'success',
-      message: 'Daftar produk yang ditemukan',
+      status: "success",
+      statusCode: res.statusCode,
+      message: "List of products found",
       data: produk,
     });
   } catch (error) {
-    next(error);
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        status: "error",
+        statusCode: error.statusCode,
+        message: error.message,
+      });
+    } else {
+      next(error);
+    }
   }
 };
 
@@ -46,12 +73,21 @@ const getProdukById = async (req, res, next) => {
     const { produkID } = req.params;
     const produk = await produkService.getProdukById(produkID);
     res.status(200).json({
-      status: 'success',
-      message: 'Data produk berhasil ditemukan',
+      status: "success",
+      statusCode: res.statusCode,
+      message: "Product data successfully found",
       data: produk,
     });
   } catch (error) {
-    res.status(404).json({ status: 'error', message: error.message });
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        status: "error",
+        statusCode: error.statusCode,
+        message: error.message,
+      });
+    } else {
+      next(error);
+    }
   }
 };
 
@@ -60,13 +96,21 @@ const getProdukByPetaniId = async (req, res, next) => {
     const { petaniID } = req.params;
     const produk = await produkService.getProdukByPetaniId(petaniID);
     res.status(200).json({
-      status: 'success',
-      message: 'Data produk berhasil ditemukan',
+      status: "success",
+      statusCode: res.statusCode,
+      message: "Product data successfully found",
       data: produk,
     });
   } catch (error) {
-    res.status(404).json({ status: 'error', message: error.message });
-    next(error);
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        status: "error",
+        statusCode: error.statusCode,
+        message: error.message,
+      });
+    } else {
+      next(error);
+    }
   }
 };
 
@@ -75,28 +119,43 @@ const updateProduk = async (req, res, next) => {
     const { produkID } = req.params;
     const updatedProduk = await produkService.updateProduk(produkID, req.body);
     res.status(200).json({
-      status: 'success',
-      message: 'Produk berhasil diupdate',
+      status: "success",
+      statusCode: res.statusCode,
+      message: "Product successfully updated",
       data: updatedProduk,
     });
   } catch (error) {
-    next(error);
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        status: "error",
+        statusCode: error.statusCode,
+        message: error.message,
+      });
+    } else {
+      next(error);
+    }
   }
 };
 
 const deleteProduk = async (req, res, next) => {
+  const { produkID } = req.params;
   try {
-    const { produkID } = req.params;
     await produkService.deleteProduk(produkID);
     res.status(200).json({
-      status: 'success',
-      message: 'Produk berhasil dihapus',
+      status: "success",
+      statusCode: res.statusCode,
+      message: "Product successfully deleted",
     });
   } catch (error) {
-    if (error.code === 'P2025') {
-      res.status(404).json({ status: 'error', message: 'Produk tidak ditemukan' });
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        status: "error",
+        statusCode: error.statusCode,
+        message: error.message,
+      });
+    } else {
+      next(error);
     }
-    next(error);
   }
 };
 

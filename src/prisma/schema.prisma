@@ -81,7 +81,7 @@ model TransaksiProduk {
   transaksiID String
   produkID    Int
   jumlah      Int
-  Produk      Produk    @relation(fields: [produkID], references: [produkID])
+  Produk      Produk    @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
   Transaksi   Transaksi @relation(fields: [transaksiID], references: [no_transaksi])
 
   @@id([transaksiID, produkID])
@@ -91,7 +91,7 @@ model PetaniProduk {
   petaniID Int
   produkID Int
   Petani   Petani @relation(fields: [petaniID], references: [petaniID])
-  Produk   Produk @relation(fields: [produkID], references: [produkID])
+  Produk   Produk @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
 
   @@id([petaniID, produkID])
 }
@@ -100,7 +100,7 @@ model PembeliProduk {
   pembeliID Int
   produkID  Int
   Pembeli   Pembeli @relation(fields: [pembeliID], references: [pembeliID])
-  Produk    Produk  @relation(fields: [produkID], references: [produkID])
+  Produk    Produk  @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
 
   @@id([pembeliID, produkID])
 }

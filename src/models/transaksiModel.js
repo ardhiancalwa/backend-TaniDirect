@@ -144,7 +144,7 @@ const Transaksi = {
   },
   findById: async (no_transaksi) => {
     return await prisma.transaksi.findUnique({
-      where: { no_transaksi: parseInt(no_transaksi) },
+      where: { no_transaksi: no_transaksi },
       include: {
         TransaksiProduk: {
           include: {
@@ -154,26 +154,14 @@ const Transaksi = {
       },
     });
   },
-  update: async (no_transaksi, data) => {
-    return await prisma.transaksi.update({
-      where: { no_transaksi: parseInt(no_transaksi) },
-      data: {
-        tanggal_transaksi: new Date(data.tanggal_transaksi),
-        waktu_transaksi: data.waktu_transaksi,
-        status_transaksi: data.status_transaksi,
-        total_harga: data.total_harga,
-        metode_pembayaran: data.metode_pembayaran,
-      },
-    });
-  },
   delete: async (no_transaksi) => {
     return await prisma.$transaction(async (prisma) => {
       await prisma.transaksiProduk.deleteMany({
-        where: { transaksiID: parseInt(no_transaksi) },
+        where: { transaksiID: no_transaksi },
       });
 
       await prisma.transaksi.delete({
-        where: { no_transaksi: parseInt(no_transaksi) },
+        where: { no_transaksi: no_transaksi },
       });
     });
   },

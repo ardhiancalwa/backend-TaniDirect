@@ -23,11 +23,6 @@ router.get(
   // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.getTransaksiById
 );
-router.put(
-  "/:no_transaksi",
-  // passport.authenticate("jwt-pembeli", { session: false }),
-  transaksiController.updateTransaksi
-);
 router.delete(
   "/:no_transaksi",
   // passport.authenticate("jwt-pembeli", { session: false }),
