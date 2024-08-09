@@ -66,7 +66,8 @@ const getPembeliById = async (pembeliID) => {
 };
 
 const registerPembeli = async (pembeliData) => {
-  pembeliData.image_pembeli = pembeliData.image_pembeli || "toufnsfyaeee0suofqji.png";
+  pembeliData.image_pembeli =
+    pembeliData.image_pembeli || "toufnsfyaeee0suofqji.png";
   pembeliData.tanggal_lahir = pembeliData.tanggal_lahir || new Date();
   pembeliData.provinsi = pembeliData.provinsi || "provinsi";
   pembeliData.kota = pembeliData.kota || "kota";
@@ -133,9 +134,13 @@ const updatePembeli = async (pembeliID, updateData) => {
     ? new Date(updateData.tanggal_lahir)
     : undefined;
 
+  const imageUrl = updateData.image_pembeli;
+  const imageFileName = imageUrl.split("/").pop();
+
   const dataToUpdate = {
     ...updateData,
     tanggal_lahir: formattedDate,
+    image_pembeli: `user/${imageFileName}`,
     password_pembeli: updateData.password_pembeli
       ? await bcrypt.hash(updateData.password_pembeli, 10)
       : undefined,

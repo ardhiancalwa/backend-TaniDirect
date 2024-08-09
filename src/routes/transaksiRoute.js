@@ -13,6 +13,10 @@ router.post(
   // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.handleMidtransNotification
 );
+router.post(
+  "/generate-token",
+  transaksiController.generateTokenMidtrans
+);
 router.get(
   "/",
   // passport.authenticate("jwt-pembeli", { session: false }),

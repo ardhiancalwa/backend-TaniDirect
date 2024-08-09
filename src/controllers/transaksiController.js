@@ -27,6 +27,28 @@ const createTransaksi = async (req, res, next) => {
   }
 };
 
+const generateTokenMidtrans = async (req, res, next) => {
+  try {
+    const result = await transaksiService.createTransaksiToken(req.body);
+    res.status(201).json({
+      status: "success",
+      statusCode: res.statusCode,
+      message: "Token generated successfully",
+      data: result,
+    });
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        status: "error",
+        statusCode: error.statusCode,
+        message: error.message,
+      });
+    } else {
+      next(error);
+    }
+  }
+};
+
 const handleMidtransNotification = async (req, res, next) => {
   const snap = new midtransClient.Snap({
     isProduction: false,
@@ -121,6 +143,7 @@ const deleteTransaksi = async (req, res, next) => {
 module.exports = {
   createTransaksi,
   handleMidtransNotification,
+  generateTokenMidtrans,
   getAllTransaksi,
   getTransaksiById,
   deleteTransaksi,

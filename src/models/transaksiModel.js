@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { findById } = require('./pembeliModel');
 const midtransClient = require('midtrans-client');
 const prisma = new PrismaClient();
 const shortUUID = require('short-uuid');
@@ -83,7 +84,7 @@ const Transaksi = {
       const midtransTransaction = await snap.createTransaction({
         transaction_details: {
           order_id: newTransaksi.no_transaksi,
-          gross_amount: totalHarga,
+          gross_amount: req.body.totalPayment,
         },
         credit_card: {
           secure: true,
@@ -102,6 +103,34 @@ const Transaksi = {
         redirect_url: midtransTransaction.redirect_url,
       };
     });
+  },
+  createTokenMidtrans : async (pembeli, totalHarga) => {
+    const snap = new midtransClient.Snap({
+      isProduction: false,
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
+    });
+  
+    const midtransTransaction = await snap.createTransaction({
+      transaction_details: {
+        order_id: `TDIRECT-${shortUUID.generate()}`,
+        gross_amount: totalHarga,
+      },
+      credit_card: {
+        secure: true,
+      },
+      customer_details: {
+        first_name: pembeli.nama_pembeli.split(' ')[0],
+        last_name: pembeli.nama_pembeli.split(' ').slice(1).join(' '),
+        email: pembeli.email_pembeli,
+        phone: pembeli.kontak_pembeli,
+      },
+    });
+  
+    return {
+      no_transaksi: midtransTransaction.order_id,
+      midtransToken: midtransTransaction.token,
+      redirect_url: midtransTransaction.redirect_url,
+    };
   },
   findAll: async () => {
     const transaksi = await prisma.transaksi.findMany({

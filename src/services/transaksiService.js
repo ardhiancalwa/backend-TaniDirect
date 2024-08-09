@@ -4,6 +4,7 @@ const {
   InternalServerError,
   NotFoundError,
 } = require("../middlewares/errorHandler");
+const { findById } = require('../models/pembeliModel');
 const Transaksi = require("../models/transaksiModel");
 
 const createTransaksi = async (data) => {
@@ -26,6 +27,30 @@ const createTransaksi = async (data) => {
   } catch (error) {
     throw new InternalServerError(
       "An unexpected error occurred while creating the transaction"
+    );
+  }
+};
+
+const createTransaksiToken = async (data) => {
+  try {
+    const pembeli = await findById(data.pembeliID);
+
+    if (!pembeli) {
+      throw new InternalServerError(
+        `Pembeli with ID ${data.pembeliID} not found`
+      );
+    }
+
+    const tokenData = await Transaksi.createTokenMidtrans(pembeli, data.totalHarga);
+
+    if (!tokenData) {
+      throw new InternalServerError("Failed to generate token");
+    }
+
+    return tokenData;
+  } catch (error) {
+    throw new InternalServerError(
+      `Failed to generate transaction token: ${error.message}`
     );
   }
 };
@@ -56,6 +81,7 @@ const deleteTransaksi = async (no_transaksi) => {
 
 module.exports = {
   createTransaksi,
+  createTransaksiToken,
   getAllTransaksi,
   getTransaksiById,
   deleteTransaksi,
