@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const { findById } = require("./pembeliModel");
+// const { findById } = require("./pembeliModel");
 const midtransClient = require("midtrans-client");
 const prisma = new PrismaClient();
 const shortUUID = require("short-uuid");
@@ -42,65 +42,66 @@ const Transaksi = {
         const produk = await prisma.produk.findUnique({
           where: { produkID: item.produkID },
         });
-  
+
         if (!produk) {
           throw new Error(`Product with ID ${item.produkID} not found`);
         }
-  
+
         if (produk.jumlah_stok < item.jumlah) {
           throw new Error(
             `Insufficient stock for product ${produk.nama_produk}`
           );
         }
-  
+
         // Calculate total price
         totalHarga += produk.harga * item.jumlah;
       }
-  
+
       // Menggunakan no_transaksi yang telah dihasilkan oleh createTokenMidtrans
       const newTransaksi = await prisma.transaksi.create({
         data: {
           no_transaksi: data.no_transaksi, // Gunakan no_transaksi dari data yang diberikan
           tanggal_transaksi: new Date(data.tanggal_transaksi),
           status_transaksi: "pending",
+          berat_produk: data.berat_produk,
           total_harga: totalHarga,
           metode_pembayaran: data.metode_pembayaran,
           pembeliID: data.pembeliID,
         },
       });
-  
+
       const transaksiProdukData = produkID.map((item) => ({
         transaksiID: newTransaksi.no_transaksi,
         produkID: item.produkID,
         jumlah: item.jumlah,
       }));
-  
+
       for (const item of produkID) {
         const produk = await prisma.produk.findUnique({
           where: { produkID: item.produkID },
         });
-  
+
         if (!produk) {
           throw new Error(`Product with ID ${item.produkID} not found`);
         }
-  
+
         if (produk.jumlah_stok < item.jumlah) {
           throw new Error(
             `Insufficient stock for product ${produk.nama_produk}`
           );
         }
-  
+
         // Update product stockk
         await prisma.produk.update({
           where: { produkID: item.produkID },
           data: { jumlah_stok: produk.jumlah_stok - item.jumlah },
         });
       }
-  
+
       await prisma.transaksiProduk.createMany({
         data: transaksiProdukData,
       });
-  
+
       return {
         transaksi: newTransaksi,
       };
@@ -152,6 +153,21 @@ const Transaksi = {
         TransaksiProduk: {
           include: {
             Produk: true,
+          },
+        },
+      },
+    });
+  },
+  findProdukByPembeliId: async (pembeliID) => {
+    return await prisma.transaksi.findMany({
+      where: {
+        pembeliID: parseInt(pembeliID),
+      },
+      include: {
+        TransaksiProduk: {
+          include: {
+            Produk: true, // Mengambil detail produk
+            Transaksi: true,
           },
         },
       },

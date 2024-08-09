@@ -27,6 +27,11 @@ router.get(
   // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.getTransaksiById
 );
+router.get(
+  "/pembeli/:pembeliID/produk",
+  // passport.authenticate("jwt-pembeli", { session: false }),
+  transaksiController.getProdukByPembeliId
+)
 router.delete(
   "/:no_transaksi",
   // passport.authenticate("jwt-pembeli", { session: false }),

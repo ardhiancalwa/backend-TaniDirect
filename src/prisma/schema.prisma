@@ -55,6 +55,7 @@ model Transaksi {
   tanggal_transaksi DateTime
   status_transaksi  String
   total_harga       Float
+  berat_produk      Int
   metode_pembayaran String
   pembeliID         Int
   Pembeli           Pembeli            @relation(fields: [pembeliID], references: [pembeliID])

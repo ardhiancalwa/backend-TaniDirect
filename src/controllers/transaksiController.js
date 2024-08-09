@@ -101,8 +101,33 @@ const getTransaksiById = async (req, res, next) => {
     const transaksi = await transaksiService.getTransaksiById(no_transaksi);
     res.status(200).json({
       status: "success",
+      statusCode: res.statusCode,
       message: "Transaction successfully found",
       data: transaksi,
+    });
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        status: "error",
+        statusCode: error.statusCode,
+        message: error.message,
+      });
+    } else {
+      next(error);
+    }
+  }
+};
+
+const getProdukByPembeliId = async (req, res, next) => {
+  const { pembeliID } = req.params;
+  
+  try {
+    const produk = await transaksiService.getProdukByPembeliId(pembeliID);
+    res.status(200).json({
+      status: "success",
+      statusCode: res.statusCode,
+      message: "Produk yang dibeli berhasil ditemukan.",
+      data: produk,
     });
   } catch (error) {
     if (error.statusCode) {
@@ -146,5 +171,6 @@ module.exports = {
   generateTokenMidtrans,
   getAllTransaksi,
   getTransaksiById,
+  getProdukByPembeliId,
   deleteTransaksi,
 };

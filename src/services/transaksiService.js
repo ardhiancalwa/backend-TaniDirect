@@ -72,6 +72,33 @@ const getTransaksiById = async (no_transaksi) => {
   return transaksi;
 };
 
+const getProdukByPembeliId = async (pembeliID) => {
+  const transaksi = await Transaksi.findProdukByPembeliId(pembeliID);
+
+  if (transaksi.length === 0) {
+    throw new NotFoundError("Produk tidak ditemukan untuk pembeli ini.");
+  }
+
+  // Menggabungkan semua produk dari setiap transaksi
+  const transaksiWithProduk = transaksi.map((trx) => ({
+    no_transaksi: trx.no_transaksi,
+    tanggal_transaksi: trx.tanggal_transaksi,
+    status_transaksi: trx.status_transaksi,
+    total_harga: trx.total_harga,
+    metode_pembayaran: trx.metode_pembayaran,
+    produk_dibeli: trx.TransaksiProduk.map((tp) => ({
+      produkID: tp.produkID,
+      nama_produk: tp.Produk.nama_produk,
+      harga: tp.Produk.harga,
+      jumlah: tp.jumlah,
+      deskripsi_produk: tp.Produk.deskripsi_produk,
+      image_produk: tp.Produk.image_produk,
+    })),
+  }));
+
+  return transaksiWithProduk;
+};
+
 const deleteTransaksi = async (no_transaksi) => {
   const transaksi = await Transaksi.findById(no_transaksi);
   if (!transaksi) {
@@ -85,5 +112,6 @@ module.exports = {
   createTransaksiToken,
   getAllTransaksi,
   getTransaksiById,
+  getProdukByPembeliId,
   deleteTransaksi,
 };
