@@ -63,7 +63,6 @@ const Transaksi = {
           no_transaksi: data.no_transaksi, // Gunakan no_transaksi dari data yang diberikan
           tanggal_transaksi: new Date(data.tanggal_transaksi),
           status_transaksi: "pending",
-          berat_produk: data.berat_produk,
           total_harga: totalHarga,
           metode_pembayaran: data.metode_pembayaran,
           pembeliID: data.pembeliID,
@@ -74,6 +73,7 @@ const Transaksi = {
         transaksiID: newTransaksi.no_transaksi,
         produkID: item.produkID,
         jumlah: item.jumlah,
+        berat_produk: item.berat_produk,
       }));
 
       for (const item of produkID) {

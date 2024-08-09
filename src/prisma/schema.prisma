@@ -55,7 +55,6 @@ model Transaksi {
   tanggal_transaksi DateTime
   status_transaksi  String
   total_harga       Float
-  berat_produk      Int
   metode_pembayaran String
   pembeliID         Int
   Pembeli           Pembeli            @relation(fields: [pembeliID], references: [pembeliID])
@@ -82,6 +81,7 @@ model TransaksiProduk {
   transaksiID String
   produkID    Int
   jumlah      Int
+  berat_produk Int?
   Produk      Produk    @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
   Transaksi   Transaksi @relation(fields: [transaksiID], references: [no_transaksi])
 
