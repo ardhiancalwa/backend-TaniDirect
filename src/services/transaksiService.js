@@ -26,7 +26,8 @@ const createTransaksi = async (data) => {
     return newTransaksi;
   } catch (error) {
     throw new InternalServerError(
-      "An unexpected error occurred while creating the transaction"
+      // "An unexpected error occurred while creating the transaction"
+      error.message
     );
   }
 };
