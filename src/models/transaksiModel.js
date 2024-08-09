@@ -90,7 +90,7 @@ const Transaksi = {
           );
         }
   
-        // Update product stock
+        // Update product stockk
         await prisma.produk.update({
           where: { produkID: item.produkID },
           data: { jumlah_stok: produk.jumlah_stok - item.jumlah },
