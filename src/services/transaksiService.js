@@ -85,12 +85,12 @@ const getProdukByPembeliId = async (pembeliID) => {
     tanggal_transaksi: trx.tanggal_transaksi,
     status_transaksi: trx.status_transaksi,
     total_harga: trx.total_harga,
-    berat_produk: trx.berat_produk,
     metode_pembayaran: trx.metode_pembayaran,
     produk_dibeli: trx.TransaksiProduk.map((tp) => ({
       produkID: tp.produkID,
       nama_produk: tp.Produk.nama_produk,
       harga: tp.Produk.harga,
+      berat_produk: tp.berat_produk,
       jumlah: tp.jumlah,
       deskripsi_produk: tp.Produk.deskripsi_produk,
       image_produk: tp.Produk.image_produk,

@@ -165,9 +165,11 @@ const Transaksi = {
       },
       include: {
         TransaksiProduk: {
-          include: {
-            Produk: true, // Mengambil detail produk
+          select: {
             Transaksi: true,
+            Produk: true, 
+            berat_produk: true, 
+            jumlah: true,
           },
         },
       },
