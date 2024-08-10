@@ -17,6 +17,13 @@ const Produk = {
   findById: async (produkID) => {
     return await prisma.produk.findUnique({
       where: { produkID: parseInt(produkID) },
+      include: {
+        PetaniProduk: {
+          include: {
+            Petani: true,
+          },  
+        }
+      }
     });
   },
   findByPetaniId: async (petaniID) => {
