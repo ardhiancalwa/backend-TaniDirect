@@ -5,6 +5,13 @@ const Produk = {
   findAll: async (sortField, sortOrder) => {
     return await prisma.produk.findMany({
       orderBy: { [sortField]: sortOrder },
+      include: {
+        PetaniProduk : {
+          include: {
+            Petani: true,
+          }
+        }
+      }
     });
   },
   findById: async (produkID) => {
