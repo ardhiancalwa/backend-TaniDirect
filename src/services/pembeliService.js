@@ -119,7 +119,7 @@ const loginPembeli = async (loginData) => {
   return { token, id: pembeli.pembeliID };
 };
 
-const updatePembeli = async (pembeliID, updateData) => {
+const updatePembeli = async (pembeliID, updateData, file) => {
   const { error } = updatePembeliSchema.validate(updateData);
   if (error) {
     throw new ValidationError(error.details[0].message);
@@ -134,25 +134,25 @@ const updatePembeli = async (pembeliID, updateData) => {
     ? new Date(updateData.tanggal_lahir)
     : undefined;
 
-  const imageUrl = updateData.image_pembeli;
-  const imageFileName = imageUrl.split("/").pop();
+  // const imageUrl = updateData.image_pembeli;
+  // const imageFileName = imageUrl.split("/").pop();
 
   const dataToUpdate = {
     ...updateData,
     tanggal_lahir: formattedDate,
-    image_pembeli: `user/${imageFileName}`,
-    password_pembeli: updateData.password_pembeli
-      ? await bcrypt.hash(updateData.password_pembeli, 10)
-      : undefined,
+    // image_pembeli: `user/${imageFileName}`,
+    // password_pembeli: updateData.password_pembeli
+    //   ? await bcrypt.hash(updateData.password_pembeli, 10)
+    //   : undefined,
   };
 
-  Object.keys(dataToUpdate).forEach((key) => {
-    if (dataToUpdate[key] === undefined) {
-      delete dataToUpdate[key];
-    }
-  });
+  // Object.keys(dataToUpdate).forEach((key) => {
+  //   if (dataToUpdate[key] === undefined) {
+  //     delete dataToUpdate[key];
+  //   }
+  // });
 
-  const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate);
+  const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate, file);
   return updatedPembeli;
 };
 

@@ -52,12 +52,13 @@ const updatePembeli = async (req, res, next) => {
   try {
     const updatePembeli = await PembeliService.updatePembeli(
       pembeliID,
-      req.body
+      req.body,
+      req.file,
     );
     res.status(200).json({
       status: "success",
       statusCode: res.statusCode,
-      message: "  ",
+      message: "Successfully updated",
       data: updatePembeli,
     });
   } catch (error) {

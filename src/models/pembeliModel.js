@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const cloudinary = require("../utils/cloudinary");
 
 const Pembeli = {
   findAll: async () => {
@@ -18,7 +19,19 @@ const Pembeli = {
   create: async (data) => {
     return await prisma.pembeli.create({ data });
   },
-  update: async (pembeliID, data) => {
+  update: async (pembeliID, data, file) => {
+    if (file) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "user",
+        public_id: `${pembeliID}-${Date.now()}`,
+      });
+      data.image_pembeli = result.public_id + "." + result.format;
+    }
+
+    if (data.password_pembeli) {
+      data.password_pembeli = await bcrypt.hash(data.password_pembeli, 10);
+    }
+
     return await prisma.pembeli.update({
       where: { pembeliID: parseInt(pembeliID) },
       data,
