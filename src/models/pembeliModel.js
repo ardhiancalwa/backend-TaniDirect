@@ -18,7 +18,7 @@ const Pembeli = {
   },
   create: async (data) => {
     return await prisma.pembeli.create({ data });
-  },
+  },//
   update: async (pembeliID, data, file) => {
     if (file) {
       const result = await cloudinary.uploader.upload(file.path, {
