@@ -62,7 +62,7 @@ const Transaksi = {
         data: {
           no_transaksi: data.no_transaksi, // Gunakan no_transaksi dari data yang diberikan
           tanggal_transaksi: new Date(data.tanggal_transaksi),
-          status_transaksi: "pending",
+          status_transaksi: "success",
           total_harga: totalHarga,
           metode_pembayaran: data.metode_pembayaran,
           pembeliID: data.pembeliID,
