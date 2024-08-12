@@ -134,26 +134,17 @@ const updatePembeli = async (pembeliID, updateData, file) => {
     ? new Date(updateData.tanggal_lahir)
     : undefined;
 
-  // const imageUrl = updateData.image_pembeli;
-  // const imageFileName = imageUrl.split("/").pop();
-
   const dataToUpdate = {
     ...updateData,
     tanggal_lahir: formattedDate,
-    // image_pembeli: `user/${imageFileName}`,
-    // password_pembeli: updateData.password_pembeli
-    //   ? await bcrypt.hash(updateData.password_pembeli, 10)
-    //   : undefined,
   };
 
-  // Object.keys(dataToUpdate).forEach((key) => {
-  //   if (dataToUpdate[key] === undefined) {
-  //     delete dataToUpdate[key];
-  //   }
-  // });
-
-  const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate, file);
-  return updatedPembeli;
+  try {
+    const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate, file);
+    return updatedPembeli;
+  } catch (err) {
+    throw new Error("Failed to update user");
+  }
 };
 
 const deletePembeli = async (pembeliID) => {

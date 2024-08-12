@@ -18,7 +18,7 @@ const Pembeli = {
   },
   create: async (data) => {
     return await prisma.pembeli.create({ data });
-  },//
+  }, //
   update: async (pembeliID, data, file) => {
     if (file) {
       const result = await cloudinary.uploader.upload(file.path, {
@@ -32,10 +32,14 @@ const Pembeli = {
       data.password_pembeli = await bcrypt.hash(data.password_pembeli, 10);
     }
 
-    return await prisma.pembeli.update({
-      where: { pembeliID: parseInt(pembeliID) },
-      data,
-    });
+    try {
+      return await prisma.pembeli.update({
+        where: { pembeliID: parseInt(pembeliID) },
+        data,
+      });
+    } catch (err) {
+      throw new Error("Failed to update user data");
+    }
   },
   delete: async (pembeliID) => {
     return await prisma.pembeli.delete({
