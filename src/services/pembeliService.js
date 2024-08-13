@@ -35,7 +35,7 @@ const updatePembeliSchema = Joi.object({
   email_pembeli: Joi.string().email().optional(),
   password_pembeli: Joi.string().optional(),
   image_pembeli: Joi.string().optional(),
-  tanggal_lahir: Joi.date().optional(),
+  tanggal_lahir: Joi.date().iso().optional(),
 });
 
 const loginSchema = Joi.object({
@@ -143,6 +143,7 @@ const updatePembeli = async (pembeliID, updateData, file) => {
     const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate, file);
     return updatedPembeli;
   } catch (err) {
+    console.error("Error in updatePembeli service:", err);
     throw new Error("Failed to update user");
   }
 };
