@@ -100,6 +100,14 @@ const getProdukByPembeliId = async (pembeliID) => {
   return transaksiWithProduk;
 };
 
+const getRecomendationProductByTotalSold = async (totalSold) => {
+  const produk = await Transaksi.findRecomendationsProdukbyTotalSold(totalSold);
+  if (produk.length === 0) {
+    throw new NotFoundError("Produk rekomendasi tidak ditemukan.");
+  }
+  return produk;
+}
+
 const deleteTransaksi = async (no_transaksi) => {
   const transaksi = await Transaksi.findById(no_transaksi);
   if (!transaksi) {
@@ -114,5 +122,6 @@ module.exports = {
   getAllTransaksi,
   getTransaksiById,
   getProdukByPembeliId,
+  getRecomendationProductByTotalSold,
   deleteTransaksi,
 };

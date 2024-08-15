@@ -13,10 +13,7 @@ router.post(
   // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.handleMidtransNotification
 );
-router.post(
-  "/generate-token",
-  transaksiController.generateTokenMidtrans
-);
+router.post("/generate-token", transaksiController.generateTokenMidtrans);
 router.get(
   "/",
   // passport.authenticate("jwt-pembeli", { session: false }),
@@ -31,7 +28,14 @@ router.get(
   "/pembeli/:pembeliID/produk",
   // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.getProdukByPembeliId
+);
+
+router.get(
+  "/recomendations/top-selling-products",
+  // passport.authenticate("jwt-pembeli", { session: false }),
+  transaksiController.getRecomendationProductByTotalSold
 )
+
 router.delete(
   "/:no_transaksi",
   // passport.authenticate("jwt-pembeli", { session: false }),

@@ -142,6 +142,28 @@ const getProdukByPembeliId = async (req, res, next) => {
   }
 };
 
+const getRecomendationProductByTotalSold = async (req, res, next) => {
+  try {
+    const result = await transaksiService.getRecomendationProductByTotalSold();
+    res.status(200).json({
+      status: "success",
+      statusCode: res.statusCode,
+      message: "Rekomendasi produk berdasarkan total penjualan",
+      data: result,
+    });
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        status: "error",
+        statusCode: error.statusCode,
+        message: error.message,
+      });
+    } else {
+      next(error);
+    }
+  }
+} 
+
 const deleteTransaksi = async (req, res, next) => {
   const { no_transaksi } = req.params;
 
@@ -172,5 +194,6 @@ module.exports = {
   getAllTransaksi,
   getTransaksiById,
   getProdukByPembeliId,
+  getRecomendationProductByTotalSold,
   deleteTransaksi,
 };

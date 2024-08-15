@@ -57,10 +57,9 @@ const Transaksi = {
         totalHarga += produk.harga * item.jumlah;
       }
 
-      // Menggunakan no_transaksi yang telah dihasilkan oleh createTokenMidtrans
       const newTransaksi = await prisma.transaksi.create({
         data: {
-          no_transaksi: data.no_transaksi, // Gunakan no_transaksi dari data yang diberikan
+          no_transaksi: data.no_transaksi,
           tanggal_transaksi: new Date(data.tanggal_transaksi),
           status_transaksi: "success",
           total_harga: totalHarga,
@@ -91,7 +90,6 @@ const Transaksi = {
           );
         }
 
-        // Update product stockk
         await prisma.produk.update({
           where: { produkID: item.produkID },
           data: { jumlah_stok: produk.jumlah_stok - item.jumlah },
@@ -118,7 +116,6 @@ const Transaksi = {
       },
     });
 
-    // Calculate total sales for each product
     const productSales = {};
 
     transaksi.forEach((trans) => {
@@ -132,10 +129,8 @@ const Transaksi = {
       });
     });
 
-    // Fetch products to include price and stock information
     const products = await prisma.produk.findMany();
 
-    // Merge sales data with product data
     const productDetails = products.map((product) => ({
       ...product,
       totalSold: productSales[product.produkID] || 0,
@@ -167,14 +162,55 @@ const Transaksi = {
         TransaksiProduk: {
           select: {
             Transaksi: true,
-            Produk: true, 
-            berat_produk: true, 
+            Produk: true,
+            berat_produk: true,
             jumlah: true,
           },
         },
       },
     });
   },
+  findRecomendationsProdukbyTotalSold: async () => {
+    const transactions = await prisma.transaksi.findMany({
+        include: {
+            TransaksiProduk: {
+                include: {
+                    Produk: true,
+                },
+            },
+        },
+    });
+
+    // Calculate total sales for each product
+    const productSales = {};
+    transactions.forEach((transaction) => {
+        transaction.TransaksiProduk.forEach((transProd) => {
+            const { produkID, jumlah } = transProd;
+            if (productSales[produkID]) {
+                productSales[produkID] += jumlah;
+            } else {
+                productSales[produkID] = jumlah;
+            }
+        });
+    });
+
+    // Convert the productSales object to an array and sort it by totalSold
+    const sortedProductSales = Object.entries(productSales)
+        .map(([produkID, totalSold]) => ({ produkID: parseInt(produkID), totalSold }))
+        .sort((a, b) => b.totalSold - a.totalSold);
+
+    // Fetch the product details for the sorted products
+    const sortedProductDetails = await Promise.all(
+        sortedProductSales.map(async ({ produkID, totalSold }) => {
+            const product = await prisma.produk.findUnique({
+                where: { produkID },
+            });
+            return { ...product, totalSold };
+        })
+    );
+
+    return sortedProductDetails;
+},
   delete: async (no_transaksi) => {
     return await prisma.$transaction(async (prisma) => {
       await prisma.transaksiProduk.deleteMany({
