@@ -1,7 +1,6 @@
 const Produk = require("../models/produkModel");
 const {
   ValidationError,
-  AuthenticationError,
   NotFoundError,
   InternalServerError,
 } = require("../middlewares/errorHandler");
@@ -30,9 +29,9 @@ const getAllProduk = async (sort, order) => {
 
   try {
     produk.forEach((item) => {
-      item.image_produk = item.image_produk
-        ? item.image_produk.replace(/\\/g, "/")
-        : null;
+      item.image_produk = item.image_produk.map((image) =>
+        image.replace(/\\/g, "/")
+      );
     });
   } catch (error) {
     throw new InternalServerError("Failed to process product data");
@@ -44,12 +43,19 @@ const addProduk = async (produkData) => {
   if (!produkData.petaniID) {
     throw new ValidationError("Farmer ID is required to add products");
   }
+  const imagePaths = produkData.image_produk.map((url) => {
+    // Ambil hanya path setelah "/produk/"
+    const path = url.split("/").slice(-2).join("/");
+    return path;
+  });
   const newProduk = await Produk.create({
     nama_produk: produkData.nama_produk,
     deskripsi_produk: produkData.deskripsi_produk,
-    image_produk: `${produkData.image_produk.replace(/\\/g, "/")}`,
+    image_produk: imagePaths,
     harga: parseFloat(produkData.harga),
     jumlah_stok: parseInt(produkData.jumlah_stok, 10),
+    jumlah_produk: produkData.jumlah_produk || 1,
+    berat_produk: produkData.berat_produk || 20,
     petaniID: produkData.petaniID,
   });
   return newProduk;
@@ -84,15 +90,19 @@ const updateProduk = async (produkID, updateData) => {
   if (!produk) {
     throw new NotFoundError("Product not found");
   }
-  const imageUrl = updateData.image_produk;
-  const imageFileName = imageUrl.split("/").pop();
 
+  const imagePaths = updateData.image_produk.map((url) => {
+    const path = url.split("/").slice(-2).join("/");
+    return path;
+  });
   const updatedProduk = await Produk.update(produkID, {
     nama_produk: updateData.nama_produk,
     deskripsi_produk: updateData.deskripsi_produk,
-    image_produk: `produk/${imageFileName}`,
+    image_produk: imagePaths,
     harga: parseFloat(updateData.harga),
     jumlah_stok: parseInt(updateData.jumlah_stok, 10),
+    jumlah_produk: updateData.jumlah_produk,
+    berat_produk: updateData.berat_produk,
   });
   return updatedProduk;
 };

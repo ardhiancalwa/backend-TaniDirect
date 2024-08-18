@@ -47,7 +47,9 @@ const Produk = {
         deskripsi_produk: data.deskripsi_produk,
         image_produk: data.image_produk, 
         harga: data.harga, 
-        jumlah_stok: data.jumlah_stok, 
+        jumlah_stok: data.jumlah_stok,
+        jumlah_produk: data.jumlah_produk ?? 1,
+        berat_produk: data.berat_produk ?? 20, 
         PetaniProduk: {
           create: {
             petaniID: parseInt(data.petaniID, 10), 
@@ -68,6 +70,8 @@ const Produk = {
         image_produk: data.image_produk,
         harga: data.harga,
         jumlah_stok: data.jumlah_stok,
+        jumlah_produk: data.jumlah_produk,
+        berat_produk: data.berat_produk,
       },
       include: {
         PetaniProduk: true,

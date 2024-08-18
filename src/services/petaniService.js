@@ -121,27 +121,6 @@ const loginPetani = async (loginData) => {
   return { token, id: petani.petaniID };
 };
 
-// const updatePetani = async (petaniID, updateData) => {
-//   const { error } = updatePetaniSchema.validate(updateData);
-//   if (error) {
-//     throw new ValidationError(error.details[0].message);
-//   }
-
-//   const petani = await Petani.findById(petaniID);
-//   if (!petani) {
-//     throw new NotFoundError("User not found");
-//   }
-
-//   const updatedPetani = await Petani.update(petaniID, {
-//     ...updateData,
-//     password_petani: updateData.password_petani
-//       ? await bcrypt.hash(updateData.password_petani, 10)
-//       : undefined,
-//   });
-
-//   return updatedPetani;
-// };
-
 const updatePetani = async (petaniID, updateData, file) => {
   const { error } = updatePetaniSchema.validate(updateData);
   if (error) {

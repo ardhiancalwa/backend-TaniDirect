@@ -90,10 +90,10 @@ model Produk {
   deskripsi_produk String
   harga            Float
   jumlah_stok      Int
-  jumlah_produk    Int?
-  berat_produk     Int?
+  jumlah_produk    Int?              @default(1)
+  berat_produk     Int?              @default(20)
   nama_produk      String
-  image_produk     String?
+  image_produk     String[]
   TransaksiProduk  TransaksiProduk[]
   PembeliProduk    PembeliProduk[]
   PetaniProduk     PetaniProduk[]

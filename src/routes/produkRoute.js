@@ -16,19 +16,6 @@ const {
   getProdukByPetaniId,
 } = require("../controllers/produkController");
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     const uploadPath = path.join(process.cwd(), "src/tmp/");
-//     cb(null, uploadPath);
-//   },
-//   filename: function (req, file, cb) {
-//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-//     const fileName =
-//       file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname);
-//     cb(null, fileName);
-//   },
-// });
-
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -48,9 +35,10 @@ router.get(
 router.post(
   "/",
   // passport.authenticate("jwt-petani", { session: false }),
-  upload.single("image_produk"),
+  upload.array("image_produk", 7),
   async (req, res, next) => {
-    req.body.image_produk = req.file ? req.file.filename : null;
+    const imageFileName = req.files.map(file => `/produk/${file.filename}`);
+    req.body.image_produk = imageFileName.join(',');
     addProduk(req, res, next);
   }
 );
@@ -67,9 +55,10 @@ router.get(
 router.put(
   "/:produkID",
   // passport.authenticate("jwt-petani", { session: false }),
-  upload.single("image_produk"),
+  upload.array("image_produk", 7),
   async (req, res, next) => {
-    req.body.image_produk = req.file ? req.file.path : null;
+    const imageFileName = req.files.map(file => `/produk/${file.filename}`);
+    req.body.image_produk = imageFileName.join(',');
     updateProduk(req, res, next);
   }
 );

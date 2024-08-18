@@ -25,6 +25,15 @@ const getAllProduk = async (req, res, next) => {
 
 const addProduk = async (req, res, next) => {
   try {
+    let imageFileNames = [];
+
+    // Pastikan file diunggah sebelum mengambil nama file
+    if (req.files && req.files.length > 0) {
+      imageFileNames = req.files.map(file => `/produk/${file.filename}`);
+    }
+
+    // Set image_produk sebagai array
+    req.body.image_produk = imageFileNames;
     const newProduk = await produkService.addProduk(req.body);
     res.status(201).json({
       status: "success",
@@ -117,6 +126,15 @@ const getProdukByPetaniId = async (req, res, next) => {
 const updateProduk = async (req, res, next) => {
   try {
     const { produkID } = req.params;
+    let imageFileNames = [];
+
+    // Pastikan file diunggah sebelum mengambil nama file
+    if (req.files && req.files.length > 0) {
+      imageFileNames = req.files.map(file => `/produk/${file.filename}`);
+    }
+
+    // Set image_produk sebagai array
+    req.body.image_produk = imageFileNames;
     const updatedProduk = await produkService.updateProduk(produkID, req.body);
     res.status(200).json({
       status: "success",
