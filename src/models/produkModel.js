@@ -63,14 +63,14 @@ const Produk = {
     return await prisma.produk.update({
       where: { produkID: parseInt(id) },
       data: {
-        nama_produk: data.nama_produk, // Update nama_produk
-        deskripsi_produk: data.deskripsi_produk, // Update deskripsi_produk
-        image_produk: data.image_produk, // Update image_produk
-        harga: data.harga, // Update harga
-        jumlah_stok: data.jumlah_stok, // Update jumlah_stok
+        nama_produk: data.nama_produk,
+        deskripsi_produk: data.deskripsi_produk,
+        image_produk: data.image_produk,
+        harga: data.harga,
+        jumlah_stok: data.jumlah_stok,
       },
       include: {
-        PetaniProduk: true, // Include PetaniProduk in the response
+        PetaniProduk: true,
       },
     });
   },

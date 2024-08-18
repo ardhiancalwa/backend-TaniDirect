@@ -90,8 +90,8 @@ model Produk {
   deskripsi_produk String
   harga            Float
   jumlah_stok      Int
-  jumlah_produk    Int
-  berat_produk     Int
+  jumlah_produk    Int?
+  berat_produk     Int?
   nama_produk      String
   image_produk     String?
   TransaksiProduk  TransaksiProduk[]
@@ -106,8 +106,6 @@ model Produk {
 model TransaksiProduk {
   transaksiID  String
   produkID     Int
-  jumlah       Int
-  berat_produk Int?
   Produk       Produk    @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
   Transaksi    Transaksi @relation(fields: [transaksiID], references: [no_transaksi])
 
@@ -135,7 +133,7 @@ model PembeliProduk {
 model KeranjangProduk {
   keranjangID        Int
   produkID           Int
-  jumlah_produk      Int
+  jumlah             Int
   total_harga_produk Int
   Produk             Produk    @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
   Keranjang          Keranjang @relation(fields: [keranjangID], references: [keranjangID], onDelete: Cascade)
