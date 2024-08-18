@@ -20,15 +20,6 @@ const Petani = {
   create: async (data) => {
     return await prisma.petani.create({ data });
   },
-  // update: async (petaniID, data) => {
-  //   if (data.password_petani) {
-  //     data.password_petani = await bcrypt.hash(data.password_petani, 10);
-  //   }
-  //   return await prisma.petani.update({
-  //     where: { petaniID: parseInt(petaniID) },
-  //     data,
-  //   });
-  // },
   update: async (petaniID, data, file) => {
     if (file) {
       const result = await cloudinary.uploader.upload(file.path, {

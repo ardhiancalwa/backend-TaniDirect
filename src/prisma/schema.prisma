@@ -45,10 +45,32 @@ model Pembeli {
   image_pembeli    String?
   Transaksi        Transaksi[]
   PembeliProduk    PembeliProduk[]
+  WishlistProduk   WishlistProduk[]  
+  Keranjang        Keranjang?        
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 }
 
+model WishlistProduk {
+  wishlistID Int             @id @default(autoincrement())
+  pembeliID  Int
+  produkID   Int
+  Pembeli    Pembeli         @relation(fields: [pembeliID], references: [pembeliID], onDelete: Cascade)
+  Produk     Produk          @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@unique([pembeliID, produkID])
+}
+
+model Keranjang {
+  keranjangID    Int              @id @default(autoincrement())
+  pembeliID      Int              @unique  
+  Pembeli        Pembeli          @relation(fields: [pembeliID], references: [pembeliID])
+  KeranjangProduk KeranjangProduk[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
 
 model Transaksi {
   no_transaksi      String                @id
@@ -68,22 +90,26 @@ model Produk {
   deskripsi_produk String
   harga            Float
   jumlah_stok      Int
+  jumlah_produk    Int
+  berat_produk     Int
   nama_produk      String
   image_produk     String?
   TransaksiProduk  TransaksiProduk[]
   PembeliProduk    PembeliProduk[]
   PetaniProduk     PetaniProduk[]
+  WishlistProduk   WishlistProduk[]
+  KeranjangProduk  KeranjangProduk[]
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 }
 
 model TransaksiProduk {
-  transaksiID String
-  produkID    Int
-  jumlah      Int
+  transaksiID  String
+  produkID     Int
+  jumlah       Int
   berat_produk Int?
-  Produk      Produk    @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
-  Transaksi   Transaksi @relation(fields: [transaksiID], references: [no_transaksi])
+  Produk       Produk    @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
+  Transaksi    Transaksi @relation(fields: [transaksiID], references: [no_transaksi])
 
   @@id([transaksiID, produkID])
 }
@@ -104,4 +130,15 @@ model PembeliProduk {
   Produk    Produk  @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
 
   @@id([pembeliID, produkID])
+}
+
+model KeranjangProduk {
+  keranjangID        Int
+  produkID           Int
+  jumlah_produk      Int
+  total_harga_produk Int
+  Produk             Produk    @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
+  Keranjang          Keranjang @relation(fields: [keranjangID], references: [keranjangID], onDelete: Cascade)
+
+  @@id([keranjangID, produkID])
 }

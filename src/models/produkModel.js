@@ -43,19 +43,19 @@ const Produk = {
   create: async (data) => {
     return await prisma.produk.create({
       data: {
-        nama_produk: data.nama_produk, // Include nama_produk
-        deskripsi_produk: data.deskripsi_produk, // Include deskripsi_produk
-        image_produk: data.image_produk, // Include image_produk
-        harga: data.harga, // Include harga
-        jumlah_stok: data.jumlah_stok, // Include jumlah_stok
+        nama_produk: data.nama_produk, 
+        deskripsi_produk: data.deskripsi_produk,
+        image_produk: data.image_produk, 
+        harga: data.harga, 
+        jumlah_stok: data.jumlah_stok, 
         PetaniProduk: {
           create: {
-            petaniID: parseInt(data.petaniID, 10), // Establish relation with Petani using PetaniProduk
+            petaniID: parseInt(data.petaniID, 10), 
           },
         },
       },
       include: {
-        PetaniProduk: true, // Include PetaniProduk in the response
+        PetaniProduk: true, 
       },
     });
   },
