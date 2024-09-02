@@ -4,6 +4,18 @@ const {
   NotFoundError,
   InternalServerError,
 } = require("../middlewares/errorHandler");
+const Joi = require("joi");
+
+const updateProdukSchema = Joi.object({
+  nama_produk: Joi.string().optional(),
+  deskripsi_produk: Joi.string().optional(),
+  image_produk: Joi.array().items(Joi.string()).optional(),
+  harga: Joi.number().positive().optional(),
+  jumlah_stok: Joi.number().integer().min(1).optional(),
+  petaniID: Joi.number().integer().optional(),
+  berat_produk: Joi.number().integer().valid(20, 50, 75, 100).optional(),
+  jumlah_produk: Joi.number().integer().min(1).optional(),
+});
 
 const getAllProduk = async (sort, order) => {
   const validSortFields = [
@@ -86,24 +98,47 @@ const getProdukByPetaniId = async (petaniID) => {
 };
 
 const updateProduk = async (produkID, updateData) => {
+  /* 
+  Opsi { abortEarly: false } berarti bahwa validasi tidak akan berhenti setelah menemukan kesalahan pertama.
+   Sebaliknya, semua kesalahan validasi akan dikumpulkan dan dilaporkan sekaligus.
+  */
+  const { error, value } = updateProdukSchema.validate(updateData, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    throw new InternalServerError(
+      `Validation error: ${error.details.map((x) => x.message).join(", ")}`
+    );
+  }
+
   const produk = await Produk.findById(produkID);
   if (!produk) {
     throw new NotFoundError("Product not found");
   }
 
-  const imagePaths = updateData.image_produk.map((url) => {
-    const path = url.split("/").slice(-2).join("/");
-    return path;
-  });
-  const updatedProduk = await Produk.update(produkID, {
-    nama_produk: updateData.nama_produk,
-    deskripsi_produk: updateData.deskripsi_produk,
+  const imagePaths = value.image_produk
+    ? value.image_produk.map((url) => {
+        const path = url.split("/").slice(-2).join("/");
+        return path;
+      })
+    : produk.image_produk;
+
+  const updateFields = {
+    nama_produk: value.nama_produk ?? produk.nama_produk,
+    deskripsi_produk: value.deskripsi_produk ?? produk.deskripsi_produk,
     image_produk: imagePaths,
-    harga: parseFloat(updateData.harga),
-    jumlah_stok: parseInt(updateData.jumlah_stok, 10),
-    jumlah_produk: updateData.jumlah_produk,
-    berat_produk: updateData.berat_produk,
-  });
+    harga: value.harga !== undefined ? parseFloat(value.harga) : produk.harga,
+    jumlah_stok:
+      value.jumlah_stok !== undefined
+        ? parseInt(value.jumlah_stok, 10)
+        : produk.jumlah_stok,
+    jumlah_produk: value.jumlah_produk ?? produk.jumlah_produk,
+    berat_produk: value.berat_produk ?? produk.berat_produk,
+  };
+
+  const updatedProduk = await Produk.update(produkID, updateFields);
+
   return updatedProduk;
 };
 

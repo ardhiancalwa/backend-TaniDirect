@@ -12,11 +12,10 @@ const pembeliRoutes = require("./routes/pembeliRoute");
 const produkRoutes = require("./routes/produkRoute");
 const transaksiRoutes = require("./routes/transaksiRoute");
 const wishlistRoutes = require("./routes/wishlistRoute");
-const errorHandler = require("./middlewares/errorHandler");
-const corsConfig = require("./middlewares/cors");
+const keranjangRoutes = require("./routes/keranjangRoute");
+// const errorHandler = require("./middlewares/errorHandler");
 // const { PrismaClient } = require("@prisma/client");
 // const prisma = new PrismaClient();
-// const corsMiddleware = require('./middlewares/cors');
 require("dotenv").config();
 require("./middlewares/auth");
 
@@ -35,19 +34,20 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(corsConfig);
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(compression());
-app.use(morgan("dev"));
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms")
+);
 
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
+    cookie: { maxAge: 10000 },
   })
 );
 
@@ -61,12 +61,12 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use("/static", express.static(path.join(process.cwd(), "src/tmp/")));
-// app.use("/static", express.static(path.join(__dirname, "../public")));
 app.use("/transaksi", transaksiRoutes);
 app.use("/produk", produkRoutes);
 app.use("/petani", petaniRoutes);
 app.use("/pembeli", pembeliRoutes);
 app.use("/wishlist", wishlistRoutes);
+app.use("/keranjang", keranjangRoutes);
 
 //test
 // Error Handling Middleware
