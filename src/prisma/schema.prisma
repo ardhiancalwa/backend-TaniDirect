@@ -40,6 +40,8 @@ model Pembeli {
   kota             String?
   kecamatan        String?
   kode_pos         String?
+  detail_alamat    String?
+  nama_alamat      String?
   tanggal_lahir    DateTime?
   image_pembeli    String?
   deskripsi        String?
