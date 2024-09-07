@@ -34,8 +34,7 @@ model Pembeli {
   nama_pembeli     String
   email_pembeli    String            @unique
   password_pembeli String
-  kontak_pembeli       String
-  alamat           String?
+  kontak_pembeli   String
   provinsi         String?
   kota             String?
   kecamatan        String?
