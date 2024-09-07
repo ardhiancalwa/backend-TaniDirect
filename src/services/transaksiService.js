@@ -1,6 +1,5 @@
 const {
   ValidationError,
-  AuthenticationError,
   InternalServerError,
   NotFoundError,
 } = require("../middlewares/errorHandler");

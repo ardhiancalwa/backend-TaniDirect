@@ -53,7 +53,6 @@ const Transaksi = {
           );
         }
 
-        // Calculate total price
         totalHarga += produk.harga * item.jumlah;
       }
 
@@ -61,7 +60,7 @@ const Transaksi = {
         data: {
           no_transaksi: data.no_transaksi,
           tanggal_transaksi: new Date(data.tanggal_transaksi),
-          status_transaksi: "success",
+          status_transaksi: "pending",
           total_harga: totalHarga,
           metode_pembayaran: data.metode_pembayaran,
           pembeliID: data.pembeliID,
@@ -71,25 +70,13 @@ const Transaksi = {
       const transaksiProdukData = produkID.map((item) => ({
         transaksiID: newTransaksi.no_transaksi,
         produkID: item.produkID,
-        jumlah: item.jumlah,
-        berat_produk: item.berat_produk,
       }));
 
       for (const item of produkID) {
         const produk = await prisma.produk.findUnique({
           where: { produkID: item.produkID },
         });
-
-        if (!produk) {
-          throw new Error(`Product with ID ${item.produkID} not found`);
-        }
-
-        if (produk.jumlah_stok < item.jumlah) {
-          throw new Error(
-            `Insufficient stock for product ${produk.nama_produk}`
-          );
-        }
-
+  
         await prisma.produk.update({
           where: { produkID: item.produkID },
           data: { jumlah_stok: produk.jumlah_stok - item.jumlah },
