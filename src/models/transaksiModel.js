@@ -150,8 +150,6 @@ const Transaksi = {
           select: {
             Transaksi: true,
             Produk: true,
-            berat_produk: true,
-            jumlah: true,
           },
         },
       },
