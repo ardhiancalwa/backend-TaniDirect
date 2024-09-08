@@ -7,7 +7,7 @@ const Pembeli = {
     return await prisma.pembeli.findMany();
   },
   findById: async (pembeliID) => {
-    return await prisma.pembeli.findUnique({
+  return await prisma.pembeli.findUnique({
       where: { pembeliID: parseInt(pembeliID) },
     });
   },

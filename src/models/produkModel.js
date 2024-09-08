@@ -79,7 +79,7 @@ const Produk = {
     });
   },
   delete: async (produkID) => {
-    return await prisma.produk.delete({
+      return await prisma.produk.delete({
       where: { produkID: parseInt(produkID) },
     });
   },
