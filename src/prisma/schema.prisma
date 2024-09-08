@@ -43,7 +43,6 @@ model Pembeli {
   nama_alamat      String?
   tanggal_lahir    DateTime?
   image_pembeli    String?
-  deskripsi        String?
   WishlistProduk   WishlistProduk[]
   Keranjang        Keranjang?
   Transaksi        Transaksi[]

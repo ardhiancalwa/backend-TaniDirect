@@ -10,12 +10,12 @@ const {
 
 const pembeliSchema = Joi.object({
   nama_pembeli: Joi.string().required(),
-  provinsi: Joi.string().optional(),
-  kota: Joi.string().optional(),
-  kecamatan: Joi.string().optional(),
-  kode_pos: Joi.string().optional(),
-  detail_alamat: Joi.string().optional(),
-  nama_alamat: Joi.string().optional(),
+  provinsi: Joi.string().allow("").optional(),
+  kota: Joi.string().allow("").optional(),
+  kecamatan: Joi.string().allow("").optional(),
+  kode_pos: Joi.string().allow("").optional(),
+  detail_alamat: Joi.string().allow("").optional(),
+  nama_alamat: Joi.string().allow("").optional(),
   kontak_pembeli: Joi.string().required(),
   email_pembeli: Joi.string().email().required(),
   password_pembeli: Joi.string().required(),
@@ -69,12 +69,12 @@ const registerPembeli = async (pembeliData) => {
   pembeliData.image_pembeli =
     pembeliData.image_pembeli || "toufnsfyaeee0suofqji.png";
   pembeliData.tanggal_lahir = pembeliData.tanggal_lahir || new Date();
-  pembeliData.provinsi = pembeliData.provinsi || "provinsi";
-  pembeliData.kota = pembeliData.kota || "kota";
-  pembeliData.kecamatan = pembeliData.kecamatan || "kecamatan";
-  pembeliData.kode_pos = pembeliData.kode_pos || "kode pos";
-  pembeliData.detail_alamat = pembeliData.detail_alamat || "detail alamat";
-  pembeliData.nama_alamat = pembeliData.nama_alamat || "nama alamat";
+  pembeliData.provinsi = pembeliData.provinsi || "";
+  pembeliData.kota = pembeliData.kota || "";
+  pembeliData.kecamatan = pembeliData.kecamatan || "";
+  pembeliData.kode_pos = pembeliData.kode_pos || "";
+  pembeliData.detail_alamat = pembeliData.detail_alamat || "";
+  pembeliData.nama_alamat = pembeliData.nama_alamat || "";
 
   const { error } = pembeliSchema.validate(pembeliData);
   if (error) {

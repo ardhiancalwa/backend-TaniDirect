@@ -11,12 +11,12 @@ const {
 // validations data petani
 const petaniSchema = Joi.object({
   nama_petani: Joi.string().required(),
-  provinsi: Joi.string().optional(),
-  kota: Joi.string().optional(),
-  kecamatan: Joi.string().optional(),
-  kode_pos: Joi.string().optional(),
-  detail_alamat: Joi.string().optional(),
-  nama_alamat: Joi.string().optional(),
+  provinsi: Joi.string().allow("").optional(),
+  kota: Joi.string().allow("").optional(),
+  kecamatan: Joi.string().allow("").optional(),
+  kode_pos: Joi.string().allow("").optional(),
+  detail_alamat: Joi.string().allow("").optional(),
+  nama_alamat: Joi.string().allow("").optional(),
   no_telepon_petani: Joi.string().required(),
   email_petani: Joi.string().email().required(),
   password_petani: Joi.string().required(),
@@ -75,12 +75,12 @@ const registerPetani = async (petaniData) => {
     petaniData.image_petani || "toufnsfyaeee0suofqji.png";
   petaniData.tanggal_lahir = petaniData.tanggal_lahir || new Date();
   petaniData.deskripsi = petaniData.deskripsi || "";
-  petaniData.provinsi = petaniData.provinsi || "provinsi";
-  petaniData.kota = petaniData.kota || "kota";
-  petaniData.kecamatan = petaniData.kecamatan || "kecamatan";
-  petaniData.kode_pos = petaniData.kode_pos || "kode pos";
-  petaniData.detail_alamat = petaniData.detail_alamat || "detail alamat";
-  petaniData.nama_alamat = petaniData.nama_alamat || "nama alamat";
+  petaniData.provinsi = petaniData.provinsi || "";
+  petaniData.kota = petaniData.kota || "";
+  petaniData.kecamatan = petaniData.kecamatan || "";
+  petaniData.kode_pos = petaniData.kode_pos || "";
+  petaniData.detail_alamat = petaniData.detail_alamat || "";
+  petaniData.nama_alamat = petaniData.nama_alamat || "";
 
   const { error } = petaniSchema.validate(petaniData);
   if (error) {
