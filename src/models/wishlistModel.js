@@ -12,6 +12,16 @@ const Wishlist = {
       },
     });
   },
+  findWishlistID: async (wishlistID) => {
+    return await prisma.wishlistProduk.findUnique({
+      where: {
+        wishlistID: parseInt(wishlistID),
+      },
+      include: {
+        Produk: true,
+      },
+    });
+  },
   addProduk: async ({ pembeliID, produkID }) => {
     return await prisma.wishlistProduk.create({
       data: {

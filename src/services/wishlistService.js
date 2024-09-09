@@ -25,11 +25,11 @@ const addToWishlist = async (items) => {
 };
 
 const removeWishlistProduk = async (wishlistID) => {
-  const wishlist = await Wishlist.removeProduk(wishlistID);
+  const wishlist = await Wishlist.findWishlistID(wishlistID);
   if (!wishlist) {
     throw new NotFoundError("Wishlist not found");
   }
-  return wishlist;
+  await Wishlist.removeProduk(wishlistID);
 };
 
 module.exports = {
