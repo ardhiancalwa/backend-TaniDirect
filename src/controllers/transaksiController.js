@@ -1,6 +1,54 @@
 const transaksiService = require("../services/transaksiService");
 const midtransClient = require("midtrans-client");
 
+// const createTransaksi = async (req, res, next) => {
+//   try {
+//     const result = await transaksiService.createTransaksi(req.body);
+//     res.status(201).json({
+//       status: "success",
+//       statusCode: res.statusCode,
+//       message: "Transaction successfully created",
+//       data: {
+//         transaksi: result.transaksi,
+//         midtransToken: result.midtransToken,
+//         redirectUrl: result.redirect_url,
+//       },
+//     });
+//   } catch (error) {
+//     if (error.statusCode) {
+//       res.status(error.statusCode).json({
+//         status: "error",
+//         statusCode: error.statusCode,
+//         message: error.message,
+//       });
+//     } else {
+//       next(error);
+//     }
+//   }
+// };
+
+// const generateTokenMidtrans = async (req, res, next) => {
+//   try {
+//     const result = await transaksiService.createTransaksiToken(req.body);
+//     res.status(201).json({
+//       status: "success",
+//       statusCode: res.statusCode,
+//       message: "Token generated successfully",
+//       data: result,
+//     });
+//   } catch (error) {
+//     if (error.statusCode) {
+//       res.status(error.statusCode).json({
+//         status: "error",
+//         statusCode: error.statusCode,
+//         message: error.message,
+//       });
+//     } else {
+//       next(error);
+//     }
+//   }
+// };
+
 const createTransaksi = async (req, res, next) => {
   try {
     const result = await transaksiService.createTransaksi(req.body);
@@ -10,31 +58,9 @@ const createTransaksi = async (req, res, next) => {
       message: "Transaction successfully created",
       data: {
         transaksi: result.transaksi,
-        midtransToken: result.midtransToken,
-        redirectUrl: result.redirect_url,
+        midtransToken: result.midtrans.midtransToken,
+        redirectUrl: result.midtrans.redirect_url,
       },
-    });
-  } catch (error) {
-    if (error.statusCode) {
-      res.status(error.statusCode).json({
-        status: "error",
-        statusCode: error.statusCode,
-        message: error.message,
-      });
-    } else {
-      next(error);
-    }
-  }
-};
-
-const generateTokenMidtrans = async (req, res, next) => {
-  try {
-    const result = await transaksiService.createTransaksiToken(req.body);
-    res.status(201).json({
-      status: "success",
-      statusCode: res.statusCode,
-      message: "Token generated successfully",
-      data: result,
     });
   } catch (error) {
     if (error.statusCode) {
@@ -188,9 +214,10 @@ const deleteTransaksi = async (req, res, next) => {
 };
 
 module.exports = {
-  createTransaksi,
+  // createTransaksi,
   handleMidtransNotification,
-  generateTokenMidtrans,
+  // generateTokenMidtrans,
+  createTransaksi,
   getAllTransaksi,
   getTransaksiById,
   getProdukByPembeliId,

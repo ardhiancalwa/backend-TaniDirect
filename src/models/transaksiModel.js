@@ -1,64 +1,143 @@
 const { PrismaClient } = require("@prisma/client");
-// const { findById } = require("./pembeliModel");
 const midtransClient = require("midtrans-client");
 const prisma = new PrismaClient();
 const shortUUID = require("short-uuid");
 
 const Transaksi = {
-  createTokenMidtrans: async (pembeli, totalHarga) => {
-    const snap = new midtransClient.Snap({
-      isProduction: false,
-      serverKey: process.env.MIDTRANS_SERVER_KEY,
-    });
+  // createTokenMidtrans: async (pembeli, totalHarga, noTransaksi) => {
+  //   const snap = new midtransClient.Snap({
+  //     isProduction: false,
+  //     serverKey: process.env.MIDTRANS_SERVER_KEY,
+  //   });
 
-    const noTransaksi = `TDIRECT-${shortUUID.generate()}`;
+  //   // const noTransaksi = `TDIRECT-${shortUUID.generate()}`;
 
-    const midtransTransaction = await snap.createTransaction({
-      transaction_details: {
-        order_id: noTransaksi,
-        gross_amount: totalHarga,
-      },
-      credit_card: {
-        secure: true,
-      },
-      customer_details: {
-        first_name: pembeli.nama_pembeli.split(" ")[0],
-        last_name: pembeli.nama_pembeli.split(" ").slice(1).join(" "),
-        email: pembeli.email_pembeli,
-        phone: pembeli.kontak_pembeli,
-      },
-    });
+  //   const midtransTransaction = await snap.createTransaction({
+  //     transaction_details: {
+  //       order_id: noTransaksi,
+  //       gross_amount: totalHarga,
+  //     },
+  //     credit_card: {
+  //       secure: true,
+  //     },
+  //     customer_details: {
+  //       first_name: pembeli.nama_pembeli.split(" ")[0],
+  //       last_name: pembeli.nama_pembeli.split(" ").slice(1).join(" "),
+  //       email: pembeli.email_pembeli,
+  //       phone: pembeli.kontak_pembeli,
+  //     },
+  //   });
 
-    return {
-      no_transaksi: noTransaksi,
-      midtransToken: midtransTransaction.token,
-      redirect_url: midtransTransaction.redirect_url,
-    };
-  },
-  create: async (data, produkID) => {
+  //   return {
+  //     no_transaksi: noTransaksi,
+  //     midtransToken: midtransTransaction.token,
+  //     redirect_url: midtransTransaction.redirect_url,
+  //   };
+  // },
+  // create: async (data, produkID) => {
+  //   return await prisma.$transaction(async (prisma) => {
+  //     let totalHarga = 0;
+  //     for (const item of produkID) {
+  //       const produk = await prisma.produk.findUnique({
+  //         where: { produkID: item.produkID },
+  //       });
+    
+  //       if (!produk) {
+  //         throw new Error(`Product with ID ${item.produkID} not found`);
+  //       }
+    
+  //       if (produk.jumlah_stok < item.jumlah) {
+  //         throw new Error(`Insufficient stock for product ${produk.nama_produk}`);
+  //       }
+    
+  //       totalHarga += produk.harga * item.jumlah;
+  //     }
+    
+  //     // Generate the transaction number
+  //     const noTransaksi = `TDIRECT-${shortUUID.generate()}`;
+  //     console.log('Generated noTransaksi in create:', noTransaksi);
+      
+  //     const pembeli = await prisma.pembeli.findUnique({
+  //       where: { pembeliID: data.pembeliID },
+  //     });
+      
+  //     if (!pembeli) {
+  //       throw new Error(`Pembeli with ID ${data.pembeliID} not found`);
+  //     }
+    
+  //     const newTransaksi = await prisma.transaksi.create({
+  //       data: {
+  //         no_transaksi: noTransaksi,
+  //         tanggal_transaksi: new Date(data.tanggal_transaksi),
+  //         status_transaksi: "pending",
+  //         total_harga: totalHarga,
+  //         metode_pembayaran: data.metode_pembayaran,
+  //         pembeliID: data.pembeliID,
+  //       },
+  //     });
+    
+  //     const transaksiProdukData = produkID.map((item) => ({
+  //       transaksiID: newTransaksi.no_transaksi,
+  //       produkID: item.produkID,
+  //     }));
+    
+  //     for (const item of produkID) {
+  //       const produk = await prisma.produk.findUnique({
+  //         where: { produkID: item.produkID },
+  //       });
+    
+  //       await prisma.produk.update({
+  //         where: { produkID: item.produkID },
+  //         data: { jumlah_stok: produk.jumlah_stok - item.jumlah },
+  //       });
+  //     }
+    
+  //     await prisma.transaksiProduk.createMany({
+  //       data: transaksiProdukData,
+  //     });
+    
+  //     // Generate Midtrans token
+  //     const midtransTokenData = await Transaksi.createTokenMidtrans(pembeli, totalHarga, noTransaksi);
+    
+  //     return {
+  //       transaksi: newTransaksi,
+  //       midtrans: midtransTokenData,
+  //     };
+  //   });
+  // },
+  createAndGenerateToken: async (data, produkID) => {
     return await prisma.$transaction(async (prisma) => {
       let totalHarga = 0;
       for (const item of produkID) {
         const produk = await prisma.produk.findUnique({
           where: { produkID: item.produkID },
         });
-
+  
         if (!produk) {
           throw new Error(`Product with ID ${item.produkID} not found`);
         }
-
+  
         if (produk.jumlah_stok < item.jumlah) {
-          throw new Error(
-            `Insufficient stock for product ${produk.nama_produk}`
-          );
+          throw new Error(`Insufficient stock for product ${produk.nama_produk}`);
         }
-
+  
         totalHarga += produk.harga * item.jumlah;
       }
-
+  
+      // Generate the transaction number
+      const noTransaksi = `TDIRECT-${shortUUID.generate()}`;
+      
+      const pembeli = await prisma.pembeli.findUnique({
+        where: { pembeliID: data.pembeliID },
+      });
+  
+      if (!pembeli) {
+        throw new Error(`Pembeli with ID ${data.pembeliID} not found`);
+      }
+  
       const newTransaksi = await prisma.transaksi.create({
         data: {
-          no_transaksi: data.no_transaksi,
+          no_transaksi: noTransaksi,
           tanggal_transaksi: new Date(data.tanggal_transaksi),
           status_transaksi: "pending",
           total_harga: totalHarga,
@@ -66,12 +145,12 @@ const Transaksi = {
           pembeliID: data.pembeliID,
         },
       });
-
+  
       const transaksiProdukData = produkID.map((item) => ({
         transaksiID: newTransaksi.no_transaksi,
         produkID: item.produkID,
       }));
-
+  
       for (const item of produkID) {
         const produk = await prisma.produk.findUnique({
           where: { produkID: item.produkID },
@@ -82,16 +161,43 @@ const Transaksi = {
           data: { jumlah_stok: produk.jumlah_stok - item.jumlah },
         });
       }
-
+  
       await prisma.transaksiProduk.createMany({
         data: transaksiProdukData,
       });
-
+  
+      // Generate Midtrans token
+      const snap = new midtransClient.Snap({
+        isProduction: false,
+        serverKey: process.env.MIDTRANS_SERVER_KEY,
+      });
+  
+      const midtransTransaction = await snap.createTransaction({
+        transaction_details: {
+          order_id: noTransaksi,
+          gross_amount: totalHarga,
+        },
+        credit_card: {
+          secure: true,
+        },
+        customer_details: {
+          first_name: pembeli.nama_pembeli.split(" ")[0],
+          last_name: pembeli.nama_pembeli.split(" ").slice(1).join(" "),
+          email: pembeli.email_pembeli,
+          phone: pembeli.kontak_pembeli,
+        },
+      });
+  
       return {
         transaksi: newTransaksi,
+        midtrans: {
+          no_transaksi: noTransaksi,
+          midtransToken: midtransTransaction.token,
+          redirect_url: midtransTransaction.redirect_url,
+        },
       };
     });
-  },
+  },  
   findAll: async () => {
     const transaksi = await prisma.transaksi.findMany({
       include: {

@@ -3,17 +3,18 @@ const router = express.Router();
 const transaksiController = require("../controllers/transaksiController");
 const passport = require("../middlewares/auth");
 
-router.post(
-  "/",
-  // passport.authenticate("jwt-pembeli", { session: false }),
-  transaksiController.createTransaksi
-);
+// router.post(
+//   "/",
+//   // passport.authenticate("jwt-pembeli", { session: false }),
+//   transaksiController.createTransaksi
+// );
 router.post(
   "/midtrans-notification",
   // passport.authenticate("jwt-pembeli", { session: false }),
   transaksiController.handleMidtransNotification
 );
-router.post("/generate-token", transaksiController.generateTokenMidtrans);
+// router.post("/generate-token", transaksiController.generateTokenMidtrans);
+router.post("/", transaksiController.createTransaksi);
 router.get(
   "/",
   // passport.authenticate("jwt-pembeli", { session: false }),
