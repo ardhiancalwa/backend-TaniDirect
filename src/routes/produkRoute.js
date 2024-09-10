@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const passport = require("../middlewares/auth");
+const {authenticatePembeli, authenticatePetani, authenticateAny} = require("../middlewares/roleAuth");
 const multer = require("multer");
 const cloudinary = require("../utils/cloudinary");
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-// const path = require("path");
 
 const {
   getAllProduk,
@@ -29,12 +28,12 @@ const upload = multer({ storage: storage });
 
 router.get(
   "/",
-  // passport.authenticate(["jwt-petani", "jwt-pembeli"], { session: false }),
+  authenticateAny,
   getAllProduk
 );
 router.post(
   "/",
-  // passport.authenticate("jwt-petani", { session: false }),
+  authenticatePetani,
   upload.array("image_produk", 7),
   async (req, res, next) => {
     const imageFileName = req.files.map(file => `/produk/${file.filename}`);
@@ -44,17 +43,17 @@ router.post(
 );
 router.get(
   "/search",
-  // passport.authenticate(["jwt-petani", "jwt-pembeli"], { session: false }),
+  authenticateAny,
   searchProduk
 );
 router.get(
   "/:produkID",
-  // passport.authenticate("jwt-petani", { session: false }),
+  authenticateAny,
   getProdukById
 );
 router.put(
   "/:produkID",
-  // passport.authenticate("jwt-petani", { session: false }),
+  authenticatePetani,
   upload.array("image_produk", 7),
   async (req, res, next) => {
     const imageFileName = req.files.map(file => `/produk/${file.filename}`);
@@ -64,12 +63,12 @@ router.put(
 );
 router.get(
   "/petani/:petaniID",
-  // passport.authenticate("jwt-petani", { session: false }),
+  authenticateAny,
   getProdukByPetaniId
 );
 router.delete(
   "/:produkID",
-  // passport.authenticate("jwt-petani", { session: false }),
+  authenticatePetani,
   deleteProduk
 );
 

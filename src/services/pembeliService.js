@@ -18,7 +18,7 @@ const pembeliSchema = Joi.object({
   nama_alamat: Joi.string().allow("").optional(),
   kontak_pembeli: Joi.string().required(),
   email_pembeli: Joi.string().email().required(),
-  password_pembeli: Joi.string().required(),
+  password_pembeli: Joi.string().min(8).required(),
   image_pembeli: Joi.string().optional(),
   tanggal_lahir: Joi.date().optional(),
 });
@@ -33,7 +33,7 @@ const updatePembeliSchema = Joi.object({
   nama_alamat: Joi.string().optional(),
   kontak_pembeli: Joi.string().optional(),
   email_pembeli: Joi.string().email().optional(),
-  password_pembeli: Joi.string().optional(),
+  password_pembeli: Joi.string().min(8).optional(),
   image_pembeli: Joi.string().optional(),
   tanggal_lahir: Joi.date().iso().optional(),
 });

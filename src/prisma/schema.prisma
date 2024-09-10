@@ -106,6 +106,7 @@ model Produk {
 model TransaksiProduk {
   transaksiID  String
   produkID     Int
+  jumlah       Int?
   Produk       Produk    @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
   Transaksi    Transaksi @relation(fields: [transaksiID], references: [no_transaksi])
 

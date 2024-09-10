@@ -4,7 +4,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 const morgan = require("morgan");
-const passport = require("passport");
+const passport = require('./middlewares/auth'); 
 const session = require("express-session");
 const rateLimit = require("express-rate-limit");
 const petaniRoutes = require("./routes/petaniRoute");
@@ -35,6 +35,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());

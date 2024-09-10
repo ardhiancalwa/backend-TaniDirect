@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const transaksiController = require("../controllers/transaksiController");
-const passport = require("../middlewares/auth");
-
+const {
+  authenticatePembeli,
+  authenticateAny,
+} = require("../middlewares/roleAuth");
 // router.post(
 //   "/",
 //   // passport.authenticate("jwt-pembeli", { session: false }),
@@ -10,36 +12,32 @@ const passport = require("../middlewares/auth");
 // );
 router.post(
   "/midtrans-notification",
-  // passport.authenticate("jwt-pembeli", { session: false }),
+  authenticatePembeli,
   transaksiController.handleMidtransNotification
 );
 // router.post("/generate-token", transaksiController.generateTokenMidtrans);
-router.post("/", transaksiController.createTransaksi);
-router.get(
-  "/",
-  // passport.authenticate("jwt-pembeli", { session: false }),
-  transaksiController.getAllTransaksi
-);
+router.post("/", authenticatePembeli, transaksiController.createTransaksi);
+router.get("/", authenticateAny, transaksiController.getAllTransaksi);
 router.get(
   "/:no_transaksi",
-  // passport.authenticate("jwt-pembeli", { session: false }),
+  authenticateAny,
   transaksiController.getTransaksiById
 );
 router.get(
   "/pembeli/:pembeliID/produk",
-  // passport.authenticate("jwt-pembeli", { session: false }),
+  authenticatePembeli,
   transaksiController.getProdukByPembeliId
 );
 
 router.get(
   "/recomendations/top-selling-products",
-  // passport.authenticate("jwt-pembeli", { session: false }),
+  authenticateAny,
   transaksiController.getRecomendationProductByTotalSold
-)
+);
 
 router.delete(
   "/:no_transaksi",
-  // passport.authenticate("jwt-pembeli", { session: false }),
+  authenticatePembeli,
   transaksiController.deleteTransaksi
 );
 

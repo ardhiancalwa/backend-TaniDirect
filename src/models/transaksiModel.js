@@ -149,6 +149,7 @@ const Transaksi = {
       const transaksiProdukData = produkID.map((item) => ({
         transaksiID: newTransaksi.no_transaksi,
         produkID: item.produkID,
+        jumlah: item.jumlah,
       }));
   
       for (const item of produkID) {
@@ -214,6 +215,8 @@ const Transaksi = {
     transaksi.forEach((trans) => {
       trans.TransaksiProduk.forEach((transProd) => {
         const { produkID, jumlah } = transProd;
+        console.log(`Product ID: ${produkID}, Jumlah Terjual: ${jumlah}`);
+        
         if (productSales[produkID]) {
           productSales[produkID] += jumlah;
         } else {
