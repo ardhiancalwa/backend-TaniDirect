@@ -43,12 +43,12 @@ router.post(
 );
 router.get(
   "/search",
-  authenticateAny,
+  // authenticateAny,
   searchProduk
 );
 router.get(
   "/:produkID",
-  authenticateAny,
+  // authenticateAny,
   getProdukById
 );
 router.put(
