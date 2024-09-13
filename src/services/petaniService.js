@@ -1,4 +1,4 @@
-const Petani = require("../models/petaniModel");
+  const Petani = require("../models/petaniModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");

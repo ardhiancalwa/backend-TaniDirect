@@ -31,7 +31,7 @@ router.get(
 
 router.get(
   "/recomendations/top-selling-products",
-  authenticateAny,
+  // authenticateAny,
   transaksiController.getRecomendationProductByTotalSold
 );
 
