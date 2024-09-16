@@ -36,7 +36,7 @@ const updatePembeliSchema = Joi.object({
   email_pembeli: Joi.string().email().optional(),
   password_pembeli: Joi.string().min(8).optional(),
   image_pembeli: Joi.string().optional(),
-  tanggal_lahir: Joi.date().iso().optional(),
+  tanggal_lahir: Joi.date().optional(),
 });
 
 const loginSchema = Joi.object({
