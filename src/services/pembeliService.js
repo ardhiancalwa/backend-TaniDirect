@@ -8,7 +8,7 @@ const {
   NotFoundError,
   InternalServerError,
 } = require("../middlewares/errorHandler");
-
+//
 const pembeliSchema = Joi.object({
   nama_pembeli: Joi.string().required(),
   provinsi: Joi.string().allow("").optional(),
