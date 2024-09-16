@@ -36,17 +36,15 @@ router.post("/login", petaniController.loginPetani);
 
 router.get(
   "/",
-  authenticatePetani,
   petaniController.getAllPetani
 );
-router.get("/:petaniID", authenticatePetani, petaniController.getPetaniById);
+router.get("/:petaniID", petaniController.getPetaniById);
 
 router.put(
   "/:petaniID",
-  authenticatePetani,
   upload.single("image_petani"),
   petaniController.updatePetani
 );
-router.delete("/:petaniID", authenticatePetani, petaniController.deletePetani);
+router.delete("/:petaniID", petaniController.deletePetani);
 
 module.exports = router;

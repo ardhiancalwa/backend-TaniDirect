@@ -28,12 +28,10 @@ const upload = multer({ storage: storage });
 
 router.get(
   "/",
-  // authenticateAny,
   getAllProduk
 );
 router.post(
   "/",
-  authenticatePetani,
   upload.array("image_produk", 7),
   async (req, res, next) => {
     const imageFileName = req.files.map(file => `/produk/${file.filename}`);
@@ -43,17 +41,14 @@ router.post(
 );
 router.get(
   "/search",
-  // authenticateAny,
   searchProduk
 );
 router.get(
   "/:produkID",
-  // authenticateAny,
   getProdukById
 );
 router.put(
   "/:produkID",
-  authenticatePetani,
   upload.array("image_produk", 7),
   async (req, res, next) => {
     const imageFileName = req.files.map(file => `/produk/${file.filename}`);
@@ -63,12 +58,10 @@ router.put(
 );
 router.get(
   "/petani/:petaniID",
-  authenticateAny,
   getProdukByPetaniId
 );
 router.delete(
   "/:produkID",
-  authenticatePetani,
   deleteProduk
 );
 

@@ -34,23 +34,19 @@ router.post("/login", pembeliController.loginPembeli);
 
 router.get(
   "/",
-  authenticatePembeli,
   pembeliController.getAllPembeli
 );
 router.get(
   "/:pembeliID",
-  authenticatePembeli,
   pembeliController.getPembeliById
 );
 router.put(
   "/:pembeliID",
-  authenticatePembeli,
   upload.single("image_pembeli"),
   pembeliController.updatePembeli
 );
 router.delete(
   "/:pembeliID",
-  authenticatePembeli,
   pembeliController.deletePembeli
 );
 
