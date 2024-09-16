@@ -6,6 +6,7 @@ const {
   ValidationError,
   AuthenticationError,
   NotFoundError,
+  InternalServerError,
 } = require("../middlewares/errorHandler");
 
 const pembeliSchema = Joi.object({
@@ -144,7 +145,7 @@ const updatePembeli = async (pembeliID, updateData, file) => {
     return updatedPembeli;
   } catch (err) {
     console.error("Error in updatePembeli service:", err);
-    throw new Error("Failed to update user");
+    throw new InternalServerError(err.message);
   }
 };
 
