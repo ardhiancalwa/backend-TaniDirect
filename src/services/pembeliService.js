@@ -1,5 +1,5 @@
 const Pembeli = require("../models/pembeliModel");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const {
