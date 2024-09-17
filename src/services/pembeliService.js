@@ -26,12 +26,12 @@ const pembeliSchema = Joi.object({
 
 const updatePembeliSchema = Joi.object({
   nama_pembeli: Joi.string().optional(),
-  provinsi: Joi.string().allow("").optional(),
-  kota: Joi.string().allow("").optional(),
-  kecamatan: Joi.string().allow("").optional(),
-  kode_pos: Joi.string().allow("").optional(),
-  detail_alamat: Joi.string().allow("").optional(),
-  nama_alamat: Joi.string().allow("").optional(),
+  provinsi: Joi.string().optional(),
+  kota: Joi.string().optional(),
+  kecamatan: Joi.string().optional(),
+  kode_pos: Joi.string().optional(),
+  detail_alamat: Joi.string().optional(),
+  nama_alamat: Joi.string().optional(),
   kontak_pembeli: Joi.string().optional(),
   email_pembeli: Joi.string().email().optional(),
   password_pembeli: Joi.string().min(8).optional(),
