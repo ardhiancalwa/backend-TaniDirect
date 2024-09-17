@@ -43,6 +43,7 @@
     "short-uuid": "^5.2.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/multer": "^1.4.11",
     "jest": "^29.7.0",
     "nodemon": "^3.1.4",
