@@ -120,35 +120,6 @@ const loginPembeli = async (loginData) => {
   return { token, id: pembeli.pembeliID };
 };
 
-// const updatePembeli = async (pembeliID, updateData, file) => {
-//   const { error } = updatePembeliSchema.validate(updateData);
-//   if (error) {
-//     throw new ValidationError(error.details[0].message);
-//   }
-
-//   const pembeli = await Pembeli.findById(pembeliID);
-//   if (!pembeli) {
-//     throw new NotFoundError("User not found");
-//   }
-
-//   const formattedDate = updateData.tanggal_lahir
-//     ? new Date(updateData.tanggal_lahir)
-//     : undefined;
-
-//   const dataToUpdate = {
-//     ...updateData,
-//     tanggal_lahir: formattedDate,
-//   };
-
-//   try {
-//     const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate, file);
-//     return updatedPembeli;
-//   } catch (err) {
-//     console.error("Error in updatePembeli service:", err);
-//     throw new InternalServerError(err.message);
-//   }
-// };
-//
 const updatePembeli = async (pembeliID, updateData, file) => {
   const { error } = updatePembeliSchema.validate(updateData);
   if (error) {
@@ -164,40 +135,75 @@ const updatePembeli = async (pembeliID, updateData, file) => {
     ? new Date(updateData.tanggal_lahir)
     : undefined;
 
-  // Create an object to hold the changes
-  let dataToUpdate = {};
+  const dataToUpdate = {
+    ...updateData,
+    tanggal_lahir: formattedDate,
+  };
 
-  // Compare existing data with new data and only include changed fields
   for (let key in updateData) {
     if (updateData[key] !== pembeli[key]) {
       dataToUpdate[key] = updateData[key];
     }
   }
 
-  if (file) {
-    const result = await cloudinary.uploader.upload(file.path, {
-      folder: "user",
-      public_id: `${pembeliID}-${Date.now()}`,
-    });
-    dataToUpdate.image_pembeli = result.public_id + "." + result.format;
-  }
-
-  if (updateData.password_pembeli) {
-    dataToUpdate.password_pembeli = await bcrypt.hash(updateData.password_pembeli, 10);
-  }
-
-  // Update the user with the changes
   try {
-    const updatedPembeli = await prisma.pembeli.update({
-      where: { pembeliID: parseInt(pembeliID) },
-      data: dataToUpdate,
-    });
+    const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate, file);
     return updatedPembeli;
   } catch (err) {
-    console.error("Error in updatePembeli:", err);
-    throw new Error("Failed to update user data");
+    console.error("Error in updatePembeli service:", err);
+    throw new InternalServerError(err.message);
   }
 };
+//
+// const updatePembeli = async (pembeliID, updateData, file) => {
+//   const { error } = updatePembeliSchema.validate(updateData);
+//   if (error) {
+//     throw new ValidationError(error.details[0].message);
+//   }
+
+//   const pembeli = await Pembeli.findById(pembeliID);
+//   if (!pembeli) {
+//     throw new NotFoundError("User not found");
+//   }
+
+//   const formattedDate = updateData.tanggal_lahir
+//     ? new Date(updateData.tanggal_lahir)
+//     : undefined;
+
+//   // Create an object to hold the changes
+//   let dataToUpdate = {};
+
+//   // Compare existing data with new data and only include changed fields
+//   for (let key in updateData) {
+//     if (updateData[key] !== pembeli[key]) {
+//       dataToUpdate[key] = updateData[key];
+//     }
+//   }
+
+//   if (file) {
+//     const result = await cloudinary.uploader.upload(file.path, {
+//       folder: "user",
+//       public_id: `${pembeliID}-${Date.now()}`,
+//     });
+//     dataToUpdate.image_pembeli = result.public_id + "." + result.format;
+//   }
+
+//   if (updateData.password_pembeli) {
+//     dataToUpdate.password_pembeli = await bcrypt.hash(updateData.password_pembeli, 10);
+//   }
+
+//   // Update the user with the changes
+//   try {
+//     const updatedPembeli = await prisma.pembeli.update({
+//       where: { pembeliID: parseInt(pembeliID) },
+//       data: dataToUpdate,
+//     });
+//     return updatedPembeli;
+//   } catch (err) {
+//     console.error("Error in updatePembeli:", err);
+//     throw new Error("Failed to update user data");
+//   }
+// };
 
 
 const deletePembeli = async (pembeliID) => {
