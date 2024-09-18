@@ -66,7 +66,7 @@ model WishlistProduk {
 model Keranjang {
   keranjangID    Int              @id @default(autoincrement())
   pembeliID      Int              @unique  
-  Pembeli        Pembeli          @relation(fields: [pembeliID], references: [pembeliID])
+  Pembeli        Pembeli          @relation(fields: [pembeliID], references: [pembeliID], onDelete: Cascade)
   KeranjangProduk KeranjangProduk[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
@@ -79,7 +79,7 @@ model Transaksi {
   total_harga       Float
   metode_pembayaran String
   pembeliID         Int
-  Pembeli           Pembeli            @relation(fields: [pembeliID], references: [pembeliID])
+  Pembeli           Pembeli            @relation(fields: [pembeliID], references: [pembeliID], onDelete: Cascade)
   TransaksiProduk   TransaksiProduk[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
@@ -108,7 +108,7 @@ model TransaksiProduk {
   produkID     Int
   jumlah       Int?
   Produk       Produk    @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
-  Transaksi    Transaksi @relation(fields: [transaksiID], references: [no_transaksi])
+  Transaksi    Transaksi @relation(fields: [transaksiID], references: [no_transaksi], onDelete: Cascade)
 
   @@id([transaksiID, produkID])
 }
@@ -116,7 +116,7 @@ model TransaksiProduk {
 model PetaniProduk {
   petaniID Int
   produkID Int
-  Petani   Petani @relation(fields: [petaniID], references: [petaniID])
+  Petani   Petani @relation(fields: [petaniID], references: [petaniID], onDelete: Cascade)
   Produk   Produk @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
 
   @@id([petaniID, produkID])
@@ -125,7 +125,7 @@ model PetaniProduk {
 model PembeliProduk {
   pembeliID Int
   produkID  Int
-  Pembeli   Pembeli @relation(fields: [pembeliID], references: [pembeliID])
+  Pembeli   Pembeli @relation(fields: [pembeliID], references: [pembeliID], onDelete: Cascade)
   Produk    Produk  @relation(fields: [produkID], references: [produkID], onDelete: Cascade)
 
   @@id([pembeliID, produkID])

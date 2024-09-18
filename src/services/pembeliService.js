@@ -70,12 +70,12 @@ const registerPembeli = async (pembeliData) => {
   pembeliData.image_pembeli =
     pembeliData.image_pembeli || "toufnsfyaeee0suofqji.png";
   pembeliData.tanggal_lahir = pembeliData.tanggal_lahir || new Date();
-  pembeliData.provinsi = pembeliData.provinsi || "";
-  pembeliData.kota = pembeliData.kota || "";
-  pembeliData.kecamatan = pembeliData.kecamatan || "";
-  pembeliData.kode_pos = pembeliData.kode_pos || "";
-  pembeliData.detail_alamat = pembeliData.detail_alamat || "";
-  pembeliData.nama_alamat = pembeliData.nama_alamat || "";
+  pembeliData.provinsi = pembeliData.provinsi || "Select Province";
+  pembeliData.kota = pembeliData.kota || "Select district";
+  pembeliData.kecamatan = pembeliData.kecamatan || "Select subdistrict";
+  pembeliData.kode_pos = pembeliData.kode_pos || "Select postal code";
+  pembeliData.detail_alamat = pembeliData.detail_alamat || "...";
+  pembeliData.nama_alamat = pembeliData.nama_alamat || "...";
 
   const { error } = pembeliSchema.validate(pembeliData);
   if (error) {
@@ -120,6 +120,35 @@ const loginPembeli = async (loginData) => {
   return { token, id: pembeli.pembeliID };
 };
 
+// const updatePembeli = async (pembeliID, updateData, file) => {
+//   const { error } = updatePembeliSchema.validate(updateData);
+//   if (error) {
+//     throw new ValidationError(error.details[0].message);
+//   }
+
+//   const pembeli = await Pembeli.findById(pembeliID);
+//   if (!pembeli) {
+//     throw new NotFoundError("User not found");
+//   }
+
+//   const formattedDate = updateData.tanggal_lahir
+//     ? new Date(updateData.tanggal_lahir)
+//     : undefined;
+
+//   const dataToUpdate = {
+//     ...updateData,
+//     tanggal_lahir: formattedDate,
+//   };
+
+//   try {
+//     const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate, file);
+//     return updatedPembeli;
+//   } catch (err) {
+//     console.error("Error in updatePembeli service:", err);
+//     throw new InternalServerError(err.message);
+//   }
+// };
+
 const updatePembeli = async (pembeliID, updateData, file) => {
   const { error } = updatePembeliSchema.validate(updateData);
   if (error) {
@@ -135,19 +164,41 @@ const updatePembeli = async (pembeliID, updateData, file) => {
     ? new Date(updateData.tanggal_lahir)
     : undefined;
 
-  const dataToUpdate = {
-    ...updateData,
-    tanggal_lahir: formattedDate,
-  };
+  // Create an object to hold the changes
+  let dataToUpdate = {};
 
+  // Compare existing data with new data and only include changed fields
+  for (let key in updateData) {
+    if (updateData[key] !== pembeli[key]) {
+      dataToUpdate[key] = updateData[key];
+    }
+  }
+
+  if (file) {
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: "user",
+      public_id: `${pembeliID}-${Date.now()}`,
+    });
+    dataToUpdate.image_pembeli = result.public_id + "." + result.format;
+  }
+
+  if (updateData.password_pembeli) {
+    dataToUpdate.password_pembeli = await bcrypt.hash(updateData.password_pembeli, 10);
+  }
+
+  // Update the user with the changes
   try {
-    const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate, file);
+    const updatedPembeli = await prisma.pembeli.update({
+      where: { pembeliID: parseInt(pembeliID) },
+      data: dataToUpdate,
+    });
     return updatedPembeli;
   } catch (err) {
-    console.error("Error in updatePembeli service:", err);
-    throw new InternalServerError(err.message);
+    console.error("Error in updatePembeli:", err);
+    throw new Error("Failed to update user data");
   }
 };
+
 
 const deletePembeli = async (pembeliID) => {
   const pembeli = await Pembeli.findById(pembeliID);

@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const cloudinary = require("../utils/cloudinary");
 const bcrypt = require("bcryptjs");
+const cloudinary = require("../utils/cloudinary");
 
 const Pembeli = {
   findAll: async () => {
