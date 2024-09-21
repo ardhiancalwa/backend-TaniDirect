@@ -141,7 +141,7 @@ const Transaksi = {
           tanggal_transaksi: new Date(),
           status_transaksi: "pending",
           total_harga: totalHarga,
-          metode_pembayaran: data.metode_pembayaran,
+          metode_pembayaran: "midtrans",
           pembeliID: data.pembeliID,
         },
       });
