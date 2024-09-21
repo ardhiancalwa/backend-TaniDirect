@@ -1,54 +1,6 @@
 const transaksiService = require("../services/transaksiService");
 const midtransClient = require("midtrans-client");
 
-// const createTransaksi = async (req, res, next) => {
-//   try {
-//     const result = await transaksiService.createTransaksi(req.body);
-//     res.status(201).json({
-//       status: "success",
-//       statusCode: res.statusCode,
-//       message: "Transaction successfully created",
-//       data: {
-//         transaksi: result.transaksi,
-//         midtransToken: result.midtransToken,
-//         redirectUrl: result.redirect_url,
-//       },
-//     });
-//   } catch (error) {
-//     if (error.statusCode) {
-//       res.status(error.statusCode).json({
-//         status: "error",
-//         statusCode: error.statusCode,
-//         message: error.message,
-//       });
-//     } else {
-//       next(error);
-//     }
-//   }
-// };
-
-// const generateTokenMidtrans = async (req, res, next) => {
-//   try {
-//     const result = await transaksiService.createTransaksiToken(req.body);
-//     res.status(201).json({
-//       status: "success",
-//       statusCode: res.statusCode,
-//       message: "Token generated successfully",
-//       data: result,
-//     });
-//   } catch (error) {
-//     if (error.statusCode) {
-//       res.status(error.statusCode).json({
-//         status: "error",
-//         statusCode: error.statusCode,
-//         message: error.message,
-//       });
-//     } else {
-//       next(error);
-//     }
-//   }
-// };
-
 const createTransaksi = async (req, res, next) => {
   try {
     const result = await transaksiService.createTransaksi(req.body);
@@ -82,21 +34,45 @@ const handleMidtransNotification = async (req, res, next) => {
   });
 
   try {
-    const statusResponse = await snap.transaction.notification(req.body);
-    const orderId = statusResponse.no_transaksi;
-    const transactionStatus = statusResponse.status_transaksi;
+    const notification = req.body;
+
+    // Ambil status dari Midtrans
+    const statusResponse = await snap.transaction.notification(notification);
+
+    const orderId = statusResponse.order_id;
+    const transactionStatus = statusResponse.transaction_status;
+
+    let statusTransaksi;
+    if (transactionStatus === 'capture') {
+      // Untuk kartu kredit, bisa 'challenge' atau 'success'
+      if (statusResponse.fraud_status === 'challenge') {
+        statusTransaksi = 'challenge';
+      } else if (statusResponse.fraud_status === 'accept') {
+        statusTransaksi = 'success';
+      }
+    } else if (transactionStatus === 'settlement') {
+      statusTransaksi = 'success';
+    } else if (transactionStatus === 'deny') {
+      statusTransaksi = 'denied';
+    } else if (transactionStatus === 'cancel' || transactionStatus === 'expire') {
+      statusTransaksi = 'canceled';
+    } else if (transactionStatus === 'pending') {
+      statusTransaksi = 'pending';
+    }
 
     // Update transaction status in the database
     await prisma.transaksi.update({
       where: { no_transaksi: orderId },
-      data: { status_transaksi: transactionStatus },
+      data: { status_transaksi: statusTransaksi },
     });
 
-    res.status(200).json({ message: "Notification received" });
+    res.status(200).json({ message: "Notification received and processed" });
   } catch (error) {
+    console.error("Error handling Midtrans notification", error);
     next(error);
   }
 };
+
 
 const getAllTransaksi = async (req, res, next) => {
   try {
