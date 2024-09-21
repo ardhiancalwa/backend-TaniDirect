@@ -138,7 +138,7 @@ const Transaksi = {
       const newTransaksi = await prisma.transaksi.create({
         data: {
           no_transaksi: noTransaksi,
-          tanggal_transaksi: new Date(data.tanggal_transaksi),
+          tanggal_transaksi: new Date(),
           status_transaksi: "pending",
           total_harga: totalHarga,
           metode_pembayaran: data.metode_pembayaran,

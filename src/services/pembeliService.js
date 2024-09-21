@@ -140,12 +140,6 @@ const updatePembeli = async (pembeliID, updateData, file) => {
     tanggal_lahir: formattedDate,
   };
 
-  // for (let key in updateData) {
-  //   if (updateData[key] !== pembeli[key]) {
-  //     dataToUpdate[key] = updateData[key];
-  //   }
-  // }
-
   try {
     const updatedPembeli = await Pembeli.update(pembeliID, dataToUpdate, file);
     return updatedPembeli;
